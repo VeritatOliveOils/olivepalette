@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
+import { SHIPPING_REGIONS } from "@/lib/constants";
 import type { Producer, Product } from "@/lib/types";
 
 export default function DashboardPage() {
@@ -19,7 +20,7 @@ export default function DashboardPage() {
     website: "",
     instagram_url: "",
     logo_url: "",
-    shipping_regions: "",
+    shipping_regions: [] as string[],
     certifications_text: "",
     is_women_led: false,
     story: "",
@@ -57,7 +58,7 @@ export default function DashboardPage() {
           website: prod.website ?? "",
           instagram_url: prod.instagram_url ?? "",
           logo_url: prod.logo_url ?? "",
-          shipping_regions: (prod.shipping_regions ?? []).join(", "),
+          shipping_regions: prod.shipping_regions ?? [],
           certifications_text: prod.certifications_text ?? "",
           is_women_led: !!prod.is_women_led,
           story: prod.story ?? "",
@@ -85,10 +86,7 @@ export default function DashboardPage() {
         website: profileDraft.website.trim() || null,
         instagram_url: profileDraft.instagram_url.trim() || null,
         logo_url: profileDraft.logo_url.trim() || null,
-        shipping_regions: profileDraft.shipping_regions
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+        shipping_regions: profileDraft.shipping_regions,
         certifications_text: profileDraft.certifications_text.trim() || null,
         is_women_led: profileDraft.is_women_led,
         story: profileDraft.story.trim() || null,
@@ -135,6 +133,18 @@ export default function DashboardPage() {
           </button>
         </div>
       </div>
+
+      {!editingProfile && (producer?.shipping_regions?.length ?? 0) === 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/50 bg-gold/10 px-5 py-4">
+          <p className="text-sm text-olive-800">
+            📦 <strong>Add your shipping regions</strong> so buyers can find you — shoppers
+            filter by where you ship, and oils without regions get missed.
+          </p>
+          <button className="btn-primary !py-1.5" onClick={() => setEditingProfile(true)}>
+            Add shipping regions
+          </button>
+        </div>
+      )}
 
       {editingProfile && (
         <div className="rounded-2xl border border-olive-200 bg-white p-6">
@@ -195,16 +205,42 @@ export default function DashboardPage() {
                 }
               />
             </div>
-            <div>
-              <label className="label">Ships to (comma-separated)</label>
-              <input
-                className="input"
-                placeholder="US, Canada, EU, UK"
-                value={profileDraft.shipping_regions}
-                onChange={(e) =>
-                  setProfileDraft({ ...profileDraft, shipping_regions: e.target.value })
-                }
-              />
+            <div className="sm:col-span-2">
+              <label className="label">
+                Ships to — where can buyers order from you?
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {SHIPPING_REGIONS.map((r) => {
+                  const on = profileDraft.shipping_regions.includes(r);
+                  return (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() =>
+                        setProfileDraft({
+                          ...profileDraft,
+                          shipping_regions: on
+                            ? profileDraft.shipping_regions.filter((x) => x !== r)
+                            : [...profileDraft.shipping_regions, r],
+                        })
+                      }
+                      className={
+                        "rounded-full border px-4 py-1.5 text-sm transition " +
+                        (on
+                          ? "border-olive-700 bg-olive-700 text-white"
+                          : "border-olive-300 bg-white text-olive-700 hover:bg-olive-50")
+                      }
+                    >
+                      {on ? "✓ " : ""}
+                      {r}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="mt-1 text-xs text-olive-500">
+                Buyers filter by this — if you ship nowhere listed here, your oils
+                won&apos;t appear in their results.
+              </p>
             </div>
             <div>
               <label className="label">Certifications (PDO/PGI, organic body…)</label>
