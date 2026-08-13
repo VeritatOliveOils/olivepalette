@@ -20,7 +20,7 @@ export default function Nav() {
     <header className="sticky top-0 z-40 border-b border-olive-200 bg-cream/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="font-serif text-xl font-bold text-olive-800">
-          🫒 OlivePalette
+          🫒 Veritat
         </Link>
         <nav className="flex items-center gap-4 text-sm font-medium text-olive-700">
           <Link href="/discover" className="hover:text-olive-950">

@@ -68,7 +68,7 @@ export default async function OilPage({
         <h1 className="font-serif text-4xl font-bold text-olive-900">{product.name}</h1>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {product.status === "approved" && (
-            <span className="tag !bg-olive-700 !text-white">✓ Certified</span>
+            <span className="tag !bg-olive-700 !text-white">✓ Veritat Certified</span>
           )}
           {product.producers?.is_women_led && <span className="tag">🚺 women-led</span>}
           {product.category && <span className="tag capitalize">{product.category}</span>}

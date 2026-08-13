@@ -83,7 +83,7 @@ export default function AdminPage() {
   if (!isAdmin)
     return (
       <p className="mt-16 text-center text-olive-600">
-        This page is for the OlivePalette curator. If that&apos;s you, add your account
+        This page is for the Veritat curator. If that&apos;s you, add your account
         to <code>admin_users</code> (see README).
       </p>
     );

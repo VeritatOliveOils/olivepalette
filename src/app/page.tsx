@@ -74,7 +74,7 @@ export default async function HomePage() {
           },
           {
             emoji: "✓",
-            title: "Certified legit",
+            title: "Veritat means truth",
             body: "Every listed oil is vetted and certified by our olive oil sommelier before it goes live — no fakes, full provenance.",
           },
           {
