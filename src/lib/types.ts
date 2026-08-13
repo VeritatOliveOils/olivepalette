@@ -83,6 +83,7 @@ export interface ParsedProduct {
   packaging?: string;
   price_usd?: number;
   buy_url?: string;
+  image_url?: string;
   organic?: boolean;
   awards?: string;
   acidity?: string;

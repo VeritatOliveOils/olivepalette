@@ -181,7 +181,7 @@ function NewProductForm() {
         packaging: p.packaging ?? "",
         price_usd: p.price_usd?.toString() ?? "",
         buy_url: p.buy_url ?? "",
-        image_url: "",
+        image_url: p.image_url ?? "",
         organic: !!p.organic,
         awards: p.awards ?? "",
         acidity: p.acidity ?? "",
@@ -558,13 +558,35 @@ function NewProductForm() {
             />
           </div>
           <div>
-            <label className="label">Image URL (bottle photo)</label>
+            <label className="label">Bottle photo (image link)</label>
             <input
-              className="input"
+              className={"input" + wasFilled("image_url")}
               placeholder="https://…/bottle.jpg"
               value={draft.image_url}
               onChange={(e) => setDraft({ ...draft, image_url: e.target.value })}
             />
+            {draft.image_url ? (
+              <div className="mt-2 flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={draft.image_url}
+                  alt="Bottle preview"
+                  className="h-20 w-20 rounded-lg border border-olive-200 object-cover"
+                />
+                <button
+                  type="button"
+                  className="text-xs text-olive-600 underline"
+                  onClick={() => setDraft({ ...draft, image_url: "" })}
+                >
+                  Remove photo
+                </button>
+              </div>
+            ) : (
+              <p className="mt-1 text-xs text-olive-500">
+                Right-click any photo on your website → &quot;Copy Image Address&quot; →
+                paste here.
+              </p>
+            )}
           </div>
         </div>
 

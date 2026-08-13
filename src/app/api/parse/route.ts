@@ -37,6 +37,95 @@ Return ONLY a JSON object (no markdown fences, no commentary) with any of these 
   "acidity": string               // e.g. "0.2%"
 }`;
 
+/** Pull the main product image from page metadata (og:image etc.). */
+function extractImage(html: string, base: string): string | null {
+  const patterns = [
+    /<meta[^>]+property=["']og:image(?::secure_url)?["'][^>]+content=["']([^"']+)["']/i,
+    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+    /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+  ];
+  for (const re of patterns) {
+    const m = html.match(re);
+    if (m?.[1]) {
+      try {
+        return new URL(m[1], base).toString();
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Read schema.org Product data that most shop platforms (Shopify, WooCommerce…)
+ * embed as JSON-LD. This gives us exact price/currency/image without guessing.
+ */
+function extractJsonLd(
+  html: string,
+  base: string
+): { price?: number; currency?: string; image?: string; name?: string } {
+  const out: { price?: number; currency?: string; image?: string; name?: string } = {};
+  const blocks = html.matchAll(
+    /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+  );
+
+  const visit = (node: unknown): void => {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node)) {
+      node.forEach(visit);
+      return;
+    }
+    const obj = node as Record<string, unknown>;
+    const type = obj["@type"];
+    const isProduct =
+      type === "Product" || (Array.isArray(type) && type.includes("Product"));
+    if (isProduct) {
+      if (typeof obj.name === "string" && !out.name) out.name = obj.name;
+      const img = obj.image;
+      if (!out.image) {
+        const raw =
+          typeof img === "string"
+            ? img
+            : Array.isArray(img) && typeof img[0] === "string"
+              ? (img[0] as string)
+              : typeof img === "object" && img !== null
+                ? ((img as Record<string, unknown>).url as string | undefined)
+                : undefined;
+        if (raw) {
+          try {
+            out.image = new URL(raw, base).toString();
+          } catch {
+            /* ignore */
+          }
+        }
+      }
+      const offers = obj.offers;
+      const offerList = Array.isArray(offers) ? offers : offers ? [offers] : [];
+      for (const o of offerList) {
+        if (!o || typeof o !== "object") continue;
+        const offer = o as Record<string, unknown>;
+        const p = offer.price ?? offer.lowPrice;
+        const n = typeof p === "string" ? parseFloat(p) : typeof p === "number" ? p : NaN;
+        if (!Number.isNaN(n) && out.price === undefined) {
+          out.price = n;
+          if (typeof offer.priceCurrency === "string") out.currency = offer.priceCurrency;
+        }
+      }
+    }
+    Object.values(obj).forEach(visit);
+  };
+
+  for (const b of blocks) {
+    try {
+      visit(JSON.parse(b[1].trim()));
+    } catch {
+      /* skip malformed blocks */
+    }
+  }
+  return out;
+}
+
 /** Strip HTML down to readable text for the model. */
 function htmlToText(html: string): string {
   return html
@@ -56,9 +145,14 @@ function htmlToText(html: string): string {
 }
 
 /** If the pasted input is essentially just a link, pull the page text ourselves. */
-async function maybeFetchUrl(
-  input: string
-): Promise<{ text: string; fetchedFrom?: string; error?: string }> {
+async function maybeFetchUrl(input: string): Promise<{
+  text: string;
+  fetchedFrom?: string;
+  error?: string;
+  image?: string;
+  price?: number;
+  currency?: string;
+}> {
   const trimmed = input.trim();
   const urlMatch = trimmed.match(/https?:\/\/[^\s]+/);
   const looksLikeJustAUrl =
@@ -98,7 +192,11 @@ async function maybeFetchUrl(
       return { text: input, error: `That page returned an error (${res.status}).` };
     }
     const html = await res.text();
+    const finalUrl = res.url || target.toString();
     const text = htmlToText(html);
+    const jsonLd = extractJsonLd(html, finalUrl);
+    const image = jsonLd.image ?? extractImage(html, finalUrl) ?? undefined;
+
     if (text.length < 200) {
       return {
         text: input,
@@ -106,7 +204,13 @@ async function maybeFetchUrl(
           "That page didn't give us readable text (many shop pages load content with JavaScript).",
       };
     }
-    return { text: text.slice(0, 30000), fetchedFrom: target.toString() };
+    return {
+      text: text.slice(0, 30000),
+      fetchedFrom: finalUrl,
+      image,
+      price: jsonLd.price,
+      currency: jsonLd.currency,
+    };
   } catch {
     return {
       text: input,
@@ -137,7 +241,14 @@ export async function POST(req: NextRequest) {
   }
 
   // If they pasted a link, read the page for them
-  const { text: sourceText, fetchedFrom, error: fetchError } = await maybeFetchUrl(text);
+  const {
+    text: sourceText,
+    fetchedFrom,
+    error: fetchError,
+    image: pageImage,
+    price: pagePrice,
+    currency: pageCurrency,
+  } = await maybeFetchUrl(text);
 
   if (fetchError) {
     return NextResponse.json(
@@ -159,7 +270,18 @@ export async function POST(req: NextRequest) {
         {
           role: "user",
           content: fetchedFrom
-            ? `The following text was extracted from ${fetchedFrom}. Extract only what is actually stated here.\n\n${sourceText}`
+            ? [
+                `The following text was extracted from ${fetchedFrom}. Extract only what is actually stated here.`,
+                pagePrice !== undefined
+                  ? `The page's structured data lists the price as ${pagePrice}${
+                      pageCurrency ? ` ${pageCurrency}` : ""
+                    } — use it (convert to USD only if it is already a USD figure; otherwise omit price_usd).`
+                  : "",
+                "",
+                sourceText,
+              ]
+                .filter(Boolean)
+                .join("\n")
             : sourceText.slice(0, 30000),
         },
       ],
@@ -185,6 +307,15 @@ export async function POST(req: NextRequest) {
 
     // If we fetched a page, keep the original link as the buy URL when none was found
     if (fetchedFrom && !parsed.buy_url) parsed.buy_url = fetchedFrom;
+    // Product photo and price come straight from the page's own metadata — no guessing
+    if (pageImage && !parsed.image_url) parsed.image_url = pageImage;
+    if (
+      pagePrice !== undefined &&
+      parsed.price_usd === undefined &&
+      (!pageCurrency || pageCurrency.toUpperCase() === "USD")
+    ) {
+      parsed.price_usd = pagePrice;
+    }
 
     return NextResponse.json({ parsed, fetchedFrom: fetchedFrom ?? null });
   } catch (e) {
