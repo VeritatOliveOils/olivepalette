@@ -88,6 +88,7 @@ function NewProductForm() {
   const [parsing, setParsing] = useState(false);
   const [parseError, setParseError] = useState<string | null>(null);
   const [filledFields, setFilledFields] = useState<string[]>([]);
+  const [fetchedFrom, setFetchedFrom] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -157,6 +158,7 @@ function NewProductForm() {
       const p: ParsedProduct = body.parsed ?? {};
       const filled: string[] = Object.keys(p);
       setFilledFields(filled);
+      setFetchedFrom(body.fetchedFrom ?? null);
       setDraft({
         ...EMPTY,
         name: p.name ?? "",
@@ -262,14 +264,18 @@ function NewProductForm() {
         <h1 className="mb-2 font-serif text-3xl font-bold text-olive-900">
           Add a product
         </h1>
-        <p className="mb-6 text-olive-600">
-          <strong>Copy. Paste. Done.</strong> Grab the text from your website product
-          page, tech sheet, or even the back label — paste it below and we&apos;ll fill
-          in every field for you to review.
+        <p className="mb-2 text-olive-600">
+          <strong>Copy. Paste. Done.</strong> Paste the text from your website product
+          page, tech sheet, or back label — or just paste the link to your product page
+          and we&apos;ll read it for you.
+        </p>
+        <p className="mb-6 text-sm text-olive-500">
+          We only fill in what your text actually says — never invented details. Anything
+          we can&apos;t find, you add yourself.
         </p>
         <textarea
           className="input min-h-64 font-mono text-xs"
-          placeholder={`Paste anything, for example:\n\nNovello Robust Blend — 2025 Harvest\nOur signature early-harvest oil from Picual and Frantoio olives grown in our Sonoma groves. Bold and peppery with notes of fresh-cut grass, artichoke, and green almond. Acidity 0.18%. Gold medal, NYIOOC 2025.\n500ml — $32. Pairs beautifully with grilled steak and hearty soups.\nBuy at https://yourfarm.com/shop/novello`}
+          placeholder={`Paste your product page text — or just its link, e.g. https://yourfarm.com/shop/novello\n\nExample text:\n\nNovello Robust Blend — 2025 Harvest\nOur signature early-harvest oil from Picual and Frantoio olives grown in our Sonoma groves. Bold and peppery with notes of fresh-cut grass, artichoke, and green almond. Acidity 0.18%. Gold medal, NYIOOC 2025.\n500ml — $32. Pairs beautifully with grilled steak and hearty soups.`}
           value={pasteText}
           onChange={(e) => setPasteText(e.target.value)}
         />
@@ -304,8 +310,10 @@ function NewProductForm() {
       </h1>
       {!editId && filledFields.length > 0 && (
         <p className="mb-6 text-olive-600">
-          We filled <strong>{filledFields.length}</strong> fields from your paste
-          (highlighted in gold). Check them, tweak anything, and save.
+          We filled <strong>{filledFields.length}</strong> fields
+          {fetchedFrom ? " from that page" : " from your paste"} (highlighted in gold).
+          Please check every one against your own records before submitting — then tweak
+          and save.
         </p>
       )}
       <div className="space-y-6 rounded-2xl border border-olive-200 bg-white p-6">
