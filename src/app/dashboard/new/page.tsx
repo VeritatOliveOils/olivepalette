@@ -21,6 +21,7 @@ type Draft = {
   country: string;
   farm_name: string;
   harvest_year: string;
+  harvest_date: string;
   intensity: string;
   flavor_tags: string[];
   tasting_notes: string;
@@ -48,6 +49,7 @@ const EMPTY: Draft = {
   country: "",
   farm_name: "",
   harvest_year: "",
+  harvest_date: "",
   intensity: "",
   flavor_tags: [],
   tasting_notes: "",
@@ -113,6 +115,7 @@ function NewProductForm() {
           country: p.country ?? "",
           farm_name: p.farm_name ?? "",
           harvest_year: p.harvest_year?.toString() ?? "",
+          harvest_date: p.harvest_date ?? "",
           intensity: p.intensity ?? "",
           flavor_tags: p.flavor_tags ?? [],
           tasting_notes: p.tasting_notes ?? "",
@@ -169,6 +172,7 @@ function NewProductForm() {
         country: p.country ?? "",
         farm_name: p.farm_name ?? "",
         harvest_year: p.harvest_year?.toString() ?? "",
+        harvest_date: p.harvest_date ?? "",
         intensity: p.intensity ?? "",
         flavor_tags: p.flavor_tags ?? [],
         tasting_notes: p.tasting_notes ?? "",
@@ -208,6 +212,16 @@ function NewProductForm() {
     setSaveError(null);
     try {
       if (!draft.name.trim()) throw new Error("Product name is required.");
+      const hy = num(draft.harvest_year);
+      if (hy === null) {
+        throw new Error(
+          "Harvest year is required — Veritat does not certify oils without a stated harvest. A 'best by' date is not a harvest date."
+        );
+      }
+      const thisYear = new Date().getFullYear();
+      if (hy < 1990 || hy > thisYear + 1) {
+        throw new Error(`Please check the harvest year — ${hy} doesn't look right.`);
+      }
       const supabase = getSupabase();
       const { data: sessionData } = await supabase.auth.getSession();
       const user = sessionData.session?.user;
@@ -226,6 +240,7 @@ function NewProductForm() {
         country: draft.country.trim() || null,
         farm_name: draft.farm_name.trim() || null,
         harvest_year: num(draft.harvest_year),
+        harvest_date: draft.harvest_date.trim() || null,
         intensity: draft.intensity || null,
         flavor_tags: draft.flavor_tags,
         tasting_notes: draft.tasting_notes.trim() || null,
@@ -344,12 +359,25 @@ function NewProductForm() {
             />
           </div>
           <div>
-            <label className="label">Harvest year</label>
+            <label className="label">Harvest year * (required for certification)</label>
             <input
               className={"input" + wasFilled("harvest_year")}
               inputMode="numeric"
+              placeholder="e.g. 2025"
               value={draft.harvest_year}
               onChange={(e) => setDraft({ ...draft, harvest_year: e.target.value })}
+            />
+            <p className="mt-1 text-xs text-olive-500">
+              The year the olives were milled — not a &quot;best by&quot; date.
+            </p>
+          </div>
+          <div>
+            <label className="label">Harvest date (optional, more precise)</label>
+            <input
+              className={"input" + wasFilled("harvest_date")}
+              placeholder="e.g. November 2025, or 12 Nov 2025"
+              value={draft.harvest_date}
+              onChange={(e) => setDraft({ ...draft, harvest_date: e.target.value })}
             />
           </div>
           <div>

@@ -7,6 +7,8 @@ export const maxDuration = 60;
 
 const SYSTEM = `You extract structured olive oil product data from text taken from a producer's website, label, or spec sheet (any language).
 
+HARVEST DATE RULE: harvest_year and harvest_date must come from an explicit harvest/milling/crush statement ("2025 harvest", "harvested November 2024", "raccolta 2025", "cosecha 2024"). NEVER derive them from a "best by", "best before", "expiry", "bottled on", or "sell by" date, and never from a copyright year or the current year. If no harvest information is stated, omit both fields.
+
 CRITICAL RULE — NEVER INVENT DATA. Only return a field if the information is explicitly stated in, or unambiguously implied by, the supplied text. If the text does not mention the region, do NOT guess a region. If it does not name the varietals, do NOT guess varietals. An omitted field is always correct; an invented field is a serious error. If the supplied text contains no real product information at all, return an empty JSON object: {}
 
 Return ONLY a JSON object (no markdown fences, no commentary) with any of these keys you can determine from the text:
@@ -19,7 +21,8 @@ Return ONLY a JSON object (no markdown fences, no commentary) with any of these 
   "region": string,               // growing region e.g. "Andalusia", "Sonoma County"
   "country": string,
   "farm_name": string,            // farm/estate name if stated
-  "harvest_year": number,
+  "harvest_year": number,       // the year the olives were HARVESTED/milled — never a "best by" or expiry year
+  "harvest_date": string,       // fuller harvest date if stated, e.g. "November 2025" or "12 Nov 2025"
   "intensity": "delicate" | "medium" | "robust",
   "flavor_tags": string[],        // prefer from: ${FLAVOR_TAGS.join(", ")}; add others only if clearly stated
   "tasting_notes": string,        // sensory description as prose
@@ -232,12 +235,93 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const { text } = await req.json();
-  if (!text || typeof text !== "string" || text.trim().length < 10) {
+  const body = await req.json();
+  const text: unknown = body?.text;
+  const images: unknown = body?.images;
+
+  const imageList: { media_type: string; data: string }[] = Array.isArray(images)
+    ? images
+        .filter(
+          (i): i is { media_type: string; data: string } =>
+            !!i &&
+            typeof i === "object" &&
+            typeof (i as { data?: unknown }).data === "string" &&
+            typeof (i as { media_type?: unknown }).media_type === "string"
+        )
+        .slice(0, 3)
+    : [];
+
+  const hasText = typeof text === "string" && text.trim().length >= 10;
+
+  if (!hasText && imageList.length === 0) {
     return NextResponse.json(
-      { error: "Paste at least a sentence or two about the product." },
+      { error: "Paste some product text or add a photo of the label." },
       { status: 400 }
     );
+  }
+
+  // ---- Label photo path: read the bottle itself ----
+  if (imageList.length > 0) {
+    const anthropicVision = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    try {
+      const msg = await anthropicVision.messages.create({
+        model: "claude-sonnet-4-5",
+        max_tokens: 1500,
+        system:
+          SYSTEM +
+          `\n\nYou are being shown photographs of an olive oil bottle's label(s). Read ONLY what is actually printed on the label. Labels may be in any language — translate field values into English where sensible (e.g. "raccolta" = harvest, "acidità" = acidity). If a value is blurry or unreadable, omit that field rather than guessing. Pay special attention to the harvest/milling date, acidity, polyphenol content, lot number, volume, and cultivar names.`,
+        messages: [
+          {
+            role: "user",
+            content: [
+              ...imageList.map((img) => ({
+                type: "image" as const,
+                source: {
+                  type: "base64" as const,
+                  media_type: img.media_type as
+                    | "image/jpeg"
+                    | "image/png"
+                    | "image/gif"
+                    | "image/webp",
+                  data: img.data,
+                },
+              })),
+              {
+                type: "text" as const,
+                text: hasText
+                  ? `Extract the product data from these label photos. The producer also supplied this text, which you may use as supporting context:\n\n${(text as string).slice(0, 10000)}`
+                  : "Extract the product data from these label photos.",
+              },
+            ],
+          },
+        ],
+      });
+
+      const raw = msg.content
+        .filter((b): b is Anthropic.TextBlock => b.type === "text")
+        .map((b) => b.text)
+        .join("");
+      const parsed = JSON.parse(
+        raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "")
+      );
+
+      if (!parsed || Object.keys(parsed).length === 0) {
+        return NextResponse.json(
+          {
+            error:
+              "We couldn't read details from that photo. Try a sharper, well-lit close-up of the back label.",
+          },
+          { status: 422 }
+        );
+      }
+      return NextResponse.json({ parsed, fetchedFrom: null, fromLabel: true });
+    } catch (e) {
+      console.error("Label vision error:", e);
+      return NextResponse.json(
+        { error: "Could not read that photo. You can still fill the form manually." },
+        { status: 500 }
+      );
+    }
   }
 
   // If they pasted a link, read the page for them
@@ -248,7 +332,7 @@ export async function POST(req: NextRequest) {
     image: pageImage,
     price: pagePrice,
     currency: pageCurrency,
-  } = await maybeFetchUrl(text);
+  } = await maybeFetchUrl(text as string);
 
   if (fetchError) {
     return NextResponse.json(

@@ -28,6 +28,7 @@ export interface Product {
   country: string | null;
   farm_name: string | null;
   harvest_year: number | null;
+  harvest_date: string | null;
   intensity: Intensity | null;
   flavor_tags: string[];
   tasting_notes: string | null;
@@ -71,6 +72,7 @@ export interface ParsedProduct {
   country?: string;
   farm_name?: string;
   harvest_year?: number;
+  harvest_date?: string;
   intensity?: Intensity;
   flavor_tags?: string[];
   tasting_notes?: string;

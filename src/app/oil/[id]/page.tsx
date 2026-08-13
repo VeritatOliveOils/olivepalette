@@ -126,7 +126,9 @@ export default async function OilPage({
           {product.harvest_year && (
             <>
               <dt className="font-semibold text-olive-500">Harvest</dt>
-              <dd className="text-olive-900">{product.harvest_year}</dd>
+              <dd className="font-semibold text-olive-900">
+                {product.harvest_date || product.harvest_year}
+              </dd>
             </>
           )}
           {product.acidity && (

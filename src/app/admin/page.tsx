@@ -140,11 +140,21 @@ export default function AdminPage() {
                 {p.tasting_notes && (
                   <p className="mt-1 text-sm italic text-olive-600">{p.tasting_notes}</p>
                 )}
+                <p className="mt-1 text-sm">
+                  {p.harvest_year ? (
+                    <span className="font-semibold text-olive-800">
+                      🫒 Harvest: {p.harvest_date || p.harvest_year}
+                    </span>
+                  ) : (
+                    <span className="font-semibold text-red-700">
+                      ⚠️ No harvest date — do not certify
+                    </span>
+                  )}
+                </p>
                 <p className="mt-2 text-xs text-olive-500">
                   {[
                     p.category,
                     p.varietals.join("/") || null,
-                    p.harvest_year,
                     p.intensity,
                     p.polyphenols_ppm ? `${p.polyphenols_ppm} mg/kg polyphenols` : null,
                     p.acidity ? `acidity ${p.acidity}` : null,
