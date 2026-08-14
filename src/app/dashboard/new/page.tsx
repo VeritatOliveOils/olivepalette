@@ -91,6 +91,10 @@ function NewProductForm() {
   const [parseError, setParseError] = useState<string | null>(null);
   const [filledFields, setFilledFields] = useState<string[]>([]);
   const [fetchedFrom, setFetchedFrom] = useState<string | null>(null);
+  const [fromLabel, setFromLabel] = useState(false);
+  const [labelPhotos, setLabelPhotos] = useState<
+    { media_type: string; data: string; preview: string }[]
+  >([]);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -137,6 +141,121 @@ function NewProductForm() {
     })();
   }, [editId]);
 
+  async function addLabelPhotos(files: FileList | null) {
+    if (!files) return;
+    const accepted = Array.from(files).slice(0, 3);
+    const encoded = await Promise.all(
+      accepted.map(
+        (file) =>
+          new Promise<{ media_type: string; data: string; preview: string } | null>(
+            (resolve) => {
+              if (file.size > 5 * 1024 * 1024) {
+                resolve(null); // skip anything over 5MB
+                return;
+              }
+              const reader = new FileReader();
+              reader.onload = () => {
+                const result = String(reader.result);
+                const base64 = result.split(",")[1] ?? "";
+                resolve({
+                  media_type: file.type || "image/jpeg",
+                  data: base64,
+                  preview: result,
+                });
+              };
+              reader.onerror = () => resolve(null);
+              reader.readAsDataURL(file);
+            }
+          )
+      )
+    );
+    const ok = encoded.filter(Boolean) as {
+      media_type: string;
+      data: string;
+      preview: string;
+    }[];
+    if (ok.length < accepted.length) {
+      setParseError("Some photos were skipped — each must be under 5MB.");
+    }
+    setLabelPhotos((prev) => [...prev, ...ok].slice(0, 3));
+  }
+
+  /** Read label photos and fill ONLY the fields still empty — never overwrite the producer. */
+  async function readLabelIntoDraft() {
+    if (labelPhotos.length === 0) return;
+    setParsing(true);
+    setParseError(null);
+    try {
+      const supabase = getSupabase();
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+      const res = await fetch("/api/parse", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          images: labelPhotos.map(({ media_type, data }) => ({ media_type, data })),
+        }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error ?? "Couldn't read that label");
+      const p: ParsedProduct = body.parsed ?? {};
+
+      const added: string[] = [];
+      setDraft((d) => {
+        const next = { ...d };
+        const put = (key: keyof Draft, value: string | undefined) => {
+          if (value && !String(next[key] ?? "").trim()) {
+            (next[key] as string) = value;
+            added.push(key);
+          }
+        };
+        put("name", p.name);
+        put("description", p.description);
+        put("category", p.category);
+        put("varietals", p.varietals?.join(", "));
+        put("region", p.region);
+        put("country", p.country);
+        put("farm_name", p.farm_name);
+        put("harvest_year", p.harvest_year?.toString());
+        put("harvest_date", p.harvest_date);
+        put("intensity", p.intensity);
+        put("tasting_notes", p.tasting_notes);
+        put("pairings", p.pairings?.join(", "));
+        put("polyphenols_ppm", p.polyphenols_ppm?.toString());
+        put("size_ml", p.size_ml?.toString());
+        put("packaging", p.packaging);
+        put("price_usd", p.price_usd?.toString());
+        put("acidity", p.acidity);
+        put("awards", p.awards);
+        if (p.flavor_tags?.length && next.flavor_tags.length === 0) {
+          next.flavor_tags = p.flavor_tags;
+          added.push("flavor_tags");
+        }
+        if (p.organic && !next.organic) next.organic = true;
+        return next;
+      });
+
+      setFilledFields((prev) => Array.from(new Set([...prev, ...added])));
+      setFromLabel(true);
+      if (added.length === 0) {
+        setParseError(
+          "We read the label but everything it showed is already filled in above."
+        );
+      }
+    } catch (e) {
+      setParseError(e instanceof Error ? e.message : "Couldn't read that label");
+    } finally {
+      setParsing(false);
+    }
+  }
+
   async function runSmartPaste() {
     setParsing(true);
     setParseError(null);
@@ -154,7 +273,10 @@ function NewProductForm() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ text: pasteText }),
+        body: JSON.stringify({
+          text: pasteText,
+          images: labelPhotos.map(({ media_type, data }) => ({ media_type, data })),
+        }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(body.error ?? "Parsing failed");
@@ -162,6 +284,7 @@ function NewProductForm() {
       const filled: string[] = Object.keys(p);
       setFilledFields(filled);
       setFetchedFrom(body.fetchedFrom ?? null);
+      setFromLabel(!!body.fromLabel);
       setDraft({
         ...EMPTY,
         name: p.name ?? "",
@@ -294,14 +417,66 @@ function NewProductForm() {
           value={pasteText}
           onChange={(e) => setPasteText(e.target.value)}
         />
+        <div className="mt-5 rounded-2xl border border-olive-200 bg-white p-5">
+          <p className="font-semibold text-olive-900">
+            📷 Or photograph your back label
+          </p>
+          <p className="mt-1 text-sm text-olive-600">
+            The harvest date, acidity and polyphenols are usually printed on the bottle.
+            Add up to 3 close-up photos and we&apos;ll read them straight off the label —
+            any language.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <label className="btn-secondary cursor-pointer">
+              Add label photo
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  addLabelPhotos(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            {labelPhotos.map((p, i) => (
+              <div key={i} className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={p.preview}
+                  alt={`Label ${i + 1}`}
+                  className="h-16 w-16 rounded-lg border border-olive-200 object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setLabelPhotos((prev) => prev.filter((_, idx) => idx !== i))
+                  }
+                  className="absolute -right-2 -top-2 h-5 w-5 rounded-full bg-olive-800 text-xs text-white"
+                  aria-label="Remove photo"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {parseError && <p className="mt-2 text-sm text-red-700">{parseError}</p>}
         <div className="mt-4 flex items-center gap-3">
           <button
             className="btn-primary"
             onClick={runSmartPaste}
-            disabled={parsing || pasteText.trim().length < 10}
+            disabled={
+              parsing || (pasteText.trim().length < 10 && labelPhotos.length === 0)
+            }
           >
-            {parsing ? "Reading your text…" : "✨ Smart Paste"}
+            {parsing
+              ? labelPhotos.length > 0
+                ? "Reading your label…"
+                : "Reading your text…"
+              : "✨ Smart Paste"}
           </button>
           <button
             className="btn-secondary"
@@ -326,11 +501,80 @@ function NewProductForm() {
       {!editId && filledFields.length > 0 && (
         <p className="mb-6 text-olive-600">
           We filled <strong>{filledFields.length}</strong> fields
-          {fetchedFrom ? " from that page" : " from your paste"} (highlighted in gold).
+          {fromLabel
+            ? " from your label photo"
+            : fetchedFrom
+              ? " from that page"
+              : " from your paste"}{" "}
+          (highlighted in gold).
           Please check every one against your own records before submitting — then tweak
           and save.
         </p>
       )}
+      <div
+        className={
+          "mb-6 rounded-2xl border p-5 " +
+          (draft.harvest_year.trim()
+            ? "border-olive-200 bg-white"
+            : "border-gold/60 bg-gold/10")
+        }
+      >
+        <p className="font-semibold text-olive-900">
+          📷 {draft.harvest_year.trim() ? "Read your label" : "Missing the harvest date?"}
+        </p>
+        <p className="mt-1 text-sm text-olive-600">
+          {draft.harvest_year.trim()
+            ? "Add close-ups of the label and we'll fill any details still blank — we never overwrite what you've already entered."
+            : "Harvest year is required for certification. It's almost always printed on the back label — photograph it and we'll read it for you."}
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <label className="btn-secondary cursor-pointer">
+            Add label photo
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={(e) => {
+                addLabelPhotos(e.target.files);
+                e.target.value = "";
+              }}
+            />
+          </label>
+          {labelPhotos.map((p, i) => (
+            <div key={i} className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.preview}
+                alt={`Label ${i + 1}`}
+                className="h-16 w-16 rounded-lg border border-olive-200 object-cover"
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setLabelPhotos((prev) => prev.filter((_, idx) => idx !== i))
+                }
+                className="absolute -right-2 -top-2 h-5 w-5 rounded-full bg-olive-800 text-xs text-white"
+                aria-label="Remove photo"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          {labelPhotos.length > 0 && (
+            <button
+              type="button"
+              className="btn-primary !py-1.5"
+              onClick={readLabelIntoDraft}
+              disabled={parsing}
+            >
+              {parsing ? "Reading label…" : "✨ Fill blanks from label"}
+            </button>
+          )}
+        </div>
+        {parseError && <p className="mt-2 text-sm text-red-700">{parseError}</p>}
+      </div>
+
       <div className="space-y-6 rounded-2xl border border-olive-200 bg-white p-6">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -372,13 +616,18 @@ function NewProductForm() {
             </p>
           </div>
           <div>
-            <label className="label">Harvest date (optional, more precise)</label>
+            <label className="label">
+              Harvest month / day — add if printed on the label
+            </label>
             <input
               className={"input" + wasFilled("harvest_date")}
               placeholder="e.g. November 2025, or 12 Nov 2025"
               value={draft.harvest_date}
               onChange={(e) => setDraft({ ...draft, harvest_date: e.target.value })}
             />
+            <p className="mt-1 text-xs text-olive-500">
+              Buyers love precision — it shows the oil is fresh.
+            </p>
           </div>
           <div>
             <label className="label">Region</label>
