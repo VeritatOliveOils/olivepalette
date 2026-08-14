@@ -63,6 +63,9 @@ export default async function ProducerPage({
               Ships to {producer.shipping_regions.join(", ")}
             </span>
           )}
+          {producer.wholesale_available && (
+            <span className="tag !bg-gold !text-olive-950">🏪 wholesale enquiries welcome</span>
+          )}
         </div>
         <div className="mt-4 flex gap-5">
           {producer.website && (
@@ -87,6 +90,26 @@ export default async function ProducerPage({
           )}
         </div>
       </div>
+
+      {producer.wholesale_available && (
+        <div className="mt-8 rounded-2xl border border-gold/50 bg-gold/10 p-6">
+          <h2 className="font-serif text-lg font-bold text-olive-900">
+            🏪 For shops, restaurants &amp; importers
+          </h2>
+          <p className="mt-1 text-sm text-olive-700">
+            {producer.name} welcomes wholesale and trade enquiries.
+            {producer.trade_notes ? ` ${producer.trade_notes}` : ""}
+          </p>
+          {producer.trade_contact_email && (
+            <a
+              href={`mailto:${producer.trade_contact_email}?subject=Wholesale enquiry via Veritat`}
+              className="btn-primary mt-3 !py-2"
+            >
+              Send a trade enquiry
+            </a>
+          )}
+        </div>
+      )}
 
       {producer.story && (
         <div className="mt-8 max-w-3xl">

@@ -13,6 +13,9 @@ export interface Producer {
   is_women_led: boolean;
   shipping_regions: string[];
   certifications_text: string | null;
+  wholesale_available: boolean;
+  trade_contact_email: string | null;
+  trade_notes: string | null;
   created_at: string;
 }
 

@@ -26,6 +26,9 @@ export default function Nav() {
           <Link href="/discover" className="hover:text-olive-950">
             Discover
           </Link>
+          <Link href="/producers" className="hover:text-olive-950">
+            Producers
+          </Link>
           {loggedIn ? (
             <Link href="/dashboard" className="btn-primary !py-1.5">
               My Products

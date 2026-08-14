@@ -23,6 +23,9 @@ export default function DashboardPage() {
     shipping_regions: [] as string[],
     certifications_text: "",
     is_women_led: false,
+    wholesale_available: false,
+    trade_contact_email: "",
+    trade_notes: "",
     story: "",
   });
 
@@ -61,6 +64,9 @@ export default function DashboardPage() {
           shipping_regions: prod.shipping_regions ?? [],
           certifications_text: prod.certifications_text ?? "",
           is_women_led: !!prod.is_women_led,
+          wholesale_available: !!prod.wholesale_available,
+          trade_contact_email: prod.trade_contact_email ?? "",
+          trade_notes: prod.trade_notes ?? "",
           story: prod.story ?? "",
         });
         const { data: prods } = await supabase
@@ -89,6 +95,9 @@ export default function DashboardPage() {
         shipping_regions: profileDraft.shipping_regions,
         certifications_text: profileDraft.certifications_text.trim() || null,
         is_women_led: profileDraft.is_women_led,
+        wholesale_available: profileDraft.wholesale_available,
+        trade_contact_email: profileDraft.trade_contact_email.trim() || null,
+        trade_notes: profileDraft.trade_notes.trim() || null,
         story: profileDraft.story.trim() || null,
       })
       .eq("id", producer.id)
@@ -264,6 +273,57 @@ export default function DashboardPage() {
                 />
                 Women-led business
               </label>
+            </div>
+
+            <div className="rounded-xl border border-olive-200 bg-olive-50 p-4 sm:col-span-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-olive-900">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-olive-700"
+                  checked={profileDraft.wholesale_available}
+                  onChange={(e) =>
+                    setProfileDraft({
+                      ...profileDraft,
+                      wholesale_available: e.target.checked,
+                    })
+                  }
+                />
+                🏪 I welcome wholesale / trade enquiries
+              </label>
+              <p className="mt-1 text-xs text-olive-600">
+                Shops, restaurants and importers browse Veritat looking for producers to
+                buy from. Tick this to appear in their search.
+              </p>
+              {profileDraft.wholesale_available && (
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="label">Trade contact email</label>
+                    <input
+                      className="input"
+                      type="email"
+                      placeholder="orders@yourfarm.com"
+                      value={profileDraft.trade_contact_email}
+                      onChange={(e) =>
+                        setProfileDraft({
+                          ...profileDraft,
+                          trade_contact_email: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Trade notes (optional)</label>
+                    <input
+                      className="input"
+                      placeholder="e.g. minimum order 12 bottles; private label available"
+                      value={profileDraft.trade_notes}
+                      onChange={(e) =>
+                        setProfileDraft({ ...profileDraft, trade_notes: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
             </div>
             <div className="sm:col-span-2">
               <label className="label">Your story (shown on your public page)</label>
