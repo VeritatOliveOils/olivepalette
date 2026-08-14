@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Nav from "@/components/Nav";
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         <footer className="border-t border-olive-200 bg-white py-8 text-center text-sm text-olive-500">
           Veritat — the truth behind every bottle. Taste, discover, buy direct from the makers.
         </footer>
+        <Analytics />
       </body>
     </html>
   );
