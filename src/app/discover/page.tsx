@@ -67,11 +67,13 @@ export default function DiscoverPage() {
   });
 
   return (
-    <div className="mt-4">
-      <h1 className="font-serif text-3xl font-bold text-olive-900">Discover oils</h1>
-      <p className="mb-6 text-olive-600">Find your next favorite by taste, region, or maker.</p>
+    <div className="mt-6">
+      <h1 className="font-serif text-4xl font-bold text-olive-900">Discover oils</h1>
+      <p className="mb-6 max-w-xl text-olive-600">
+        Every bottle certified by hand. Filter by taste, origin, or where it can ship.
+      </p>
 
-      <div className="mb-6 space-y-4 rounded-2xl border border-olive-200 bg-white p-5">
+      <div className="card mb-8 space-y-4 p-6">
         <input
           className="input"
           placeholder="Search by name, region, varietal, or producer…"
@@ -167,11 +169,22 @@ export default function DiscoverPage() {
       {loading ? (
         <p className="py-16 text-center text-olive-500">Loading oils…</p>
       ) : visible.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-olive-300 p-12 text-center text-olive-500">
-          No oils match those filters yet.
-        </p>
+        <div className="card px-8 py-16 text-center">
+          <p className="text-4xl">🫒</p>
+          <p className="mt-3 font-serif text-2xl font-bold text-olive-900">
+            No oils match those filters yet
+          </p>
+          <p className="mt-1 text-olive-600">
+            Veritat is new — the founding producers are being certified now. Try clearing a
+            filter, or see{" "}
+            <a href="/example" className="underline">
+              what a listing looks like
+            </a>
+            .
+          </p>
+        </div>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

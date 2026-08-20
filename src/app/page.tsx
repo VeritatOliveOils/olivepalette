@@ -22,42 +22,95 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="mt-8 rounded-3xl bg-olive-800 px-8 py-16 text-center text-white">
-        <h1 className="mx-auto max-w-2xl font-serif text-4xl font-bold leading-tight sm:text-5xl">
-          Taste olive oil like an expert.
-          <br />
-          Buy it straight from the maker.
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-olive-100">
-          Explore certified artisanal extra virgin olive oils by flavor profile — grassy,
-          peppery, buttery — and discover the people and groves behind every bottle.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/discover" className="btn-primary !bg-gold !text-olive-950 hover:!bg-yellow-500">
-            Explore oils
-          </Link>
-          <Link
-            href="/login?mode=signup"
-            className="btn-secondary !border-olive-500 !bg-transparent !text-white hover:!bg-olive-700"
-          >
-            I&apos;m a producer
-          </Link>
+      {/* Hero */}
+      <section className="relative mt-6 overflow-hidden rounded-[2rem] bg-olive-900 px-6 py-20 text-center text-white sm:px-12 sm:py-28">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.18]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 20% 20%, #c4cd93 0, transparent 45%), radial-gradient(circle at 80% 70%, #c9a227 0, transparent 40%)",
+          }}
+        />
+        <div className="relative">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-olive-200">
+            The Olive Oil Buyer&apos;s Guide
+          </p>
+          <h1 className="mx-auto max-w-3xl font-serif text-5xl font-bold leading-[1.05] sm:text-7xl">
+            Find real
+            <br />
+            olive oil.
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-olive-100">
+            Most bottles won&apos;t tell you when the olives were picked. Every oil here
+            will — certified by an olive oil sommelier, and sold direct by the family who
+            made it.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/discover"
+              className="btn-primary !bg-gold !px-8 !py-3 !text-olive-950 hover:!bg-yellow-500"
+            >
+              Explore the oils
+            </Link>
+            <Link
+              href="/producers"
+              className="btn-secondary !border-olive-600 !bg-transparent !px-8 !py-3 !text-white hover:!bg-olive-800"
+            >
+              Meet the producers
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section className="mt-14">
-        <div className="mb-4 flex items-baseline justify-between">
-          <h2 className="font-serif text-2xl font-bold text-olive-900">Latest oils</h2>
-          <Link href="/discover" className="text-sm font-medium text-olive-700 hover:underline">
+      {/* The problem — editorial statement */}
+      <section className="mx-auto mt-20 max-w-3xl text-center">
+        <div className="rule-ornament mb-6">🫒</div>
+        <p className="font-serif text-2xl leading-relaxed text-olive-800 sm:text-3xl">
+          Most bottles labelled <em>extra virgin</em> can&apos;t tell you when the olives
+          were picked. Ours can — or they don&apos;t get listed.
+        </p>
+      </section>
+
+      {/* Latest oils */}
+      <section className="mt-20">
+        <div className="mb-6 flex items-end justify-between border-b border-olive-200 pb-4">
+          <div>
+            <h2 className="font-serif text-3xl font-bold text-olive-900">
+              Certified oils
+            </h2>
+            <p className="text-sm text-olive-600">
+              Each one reviewed and approved by hand.
+            </p>
+          </div>
+          <Link
+            href="/discover"
+            className="whitespace-nowrap text-sm font-semibold text-olive-700 hover:underline"
+          >
             See all →
           </Link>
         </div>
         {featured.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-olive-300 p-10 text-center text-olive-500">
-            No oils listed yet — be the first producer to add yours.
-          </p>
+          <div className="card px-8 py-16 text-center">
+            <p className="text-4xl">🫒</p>
+            <h3 className="mt-3 font-serif text-2xl font-bold text-olive-900">
+              The first bottles are being certified now
+            </h3>
+            <p className="mx-auto mt-2 max-w-md text-olive-600">
+              Veritat is opening with a small group of founding producers. If you make
+              exceptional olive oil, there&apos;s a place for you here.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link href="/login?mode=signup" className="btn-primary">
+                List your oil — free
+              </Link>
+              <Link href="/example" className="btn-secondary">
+                See a sample listing
+              </Link>
+            </div>
+          </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -65,30 +118,62 @@ export default async function HomePage() {
         )}
       </section>
 
-      <section className="mt-16 grid gap-6 sm:grid-cols-3">
-        {[
-          {
-            emoji: "📋",
-            title: "Copy. Paste. Listed.",
-            body: "Producers paste their existing website or label text and Smart Paste turns it into a rich product page — no forms to fight.",
-          },
-          {
-            emoji: "✓",
-            title: "Veritat means truth",
-            body: "Every listed oil is vetted and certified by our olive oil sommelier before it goes live — no fakes, full provenance.",
-          },
-          {
-            emoji: "🤝",
-            title: "Direct from makers",
-            body: "Every bottle links straight to the producer's own shop — many women-led. No middlemen, full story.",
-          },
-        ].map((f) => (
-          <div key={f.title} className="rounded-2xl border border-olive-200 bg-white p-6">
-            <p className="text-3xl">{f.emoji}</p>
-            <h3 className="mt-2 font-serif text-lg font-bold text-olive-900">{f.title}</h3>
-            <p className="mt-1 text-sm text-olive-600">{f.body}</p>
-          </div>
-        ))}
+      {/* How it works */}
+      <section className="mt-24">
+        <div className="mb-8 text-center">
+          <h2 className="font-serif text-3xl font-bold text-olive-900">
+            How Veritat works
+          </h2>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-3">
+          {[
+            {
+              n: "I",
+              title: "Producers list in minutes",
+              body: "Paste your product page, or photograph your back label. We read the harvest date, varietals and acidity straight from your own words — never invented.",
+            },
+            {
+              n: "II",
+              title: "Every oil is certified",
+              body: "A sommelier reviews each listing before it appears. No harvest date, no certification. The ✓ mark means someone checked.",
+            },
+            {
+              n: "III",
+              title: "Buyers go direct to you",
+              body: "Shoppers filter by taste, origin and shipping, then click through to your own shop. We never touch the sale or your customer.",
+            },
+          ].map((f) => (
+            <div key={f.n} className="card p-7">
+              <p className="font-serif text-3xl font-bold text-gold">{f.n}</p>
+              <h3 className="mt-2 font-serif text-xl font-bold text-olive-900">
+                {f.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-olive-600">{f.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Producer CTA */}
+      <section className="mt-24 overflow-hidden rounded-[2rem] border border-olive-200 bg-white px-8 py-14 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-olive-500">
+          For producers
+        </p>
+        <h2 className="mx-auto mt-3 max-w-2xl font-serif text-4xl font-bold leading-tight text-olive-900">
+          Your oil deserves to be found by people who care what&apos;s in the bottle.
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-olive-600">
+          Founding producers list free, forever. Ten minutes to add your first oil — and
+          you keep the sale, the customer and the story.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link href="/login?mode=signup" className="btn-primary !px-8 !py-3">
+            Join as a founding producer
+          </Link>
+          <Link href="/example" className="btn-secondary !px-8 !py-3">
+            What a listing looks like
+          </Link>
+        </div>
       </section>
     </div>
   );

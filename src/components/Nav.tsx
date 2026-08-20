@@ -17,12 +17,17 @@ export default function Nav() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-olive-200 bg-cream/90 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="font-serif text-xl font-bold text-olive-800">
-          🫒 Veritat
+    <header className="sticky top-0 z-40 border-b border-olive-200/70 bg-cream/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <Link href="/" className="group flex flex-col leading-none">
+          <span className="font-serif text-2xl font-bold tracking-tight text-olive-900 group-hover:text-olive-700">
+            Veritat
+          </span>
+          <span className="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-olive-500">
+            The Olive Oil Buyer&apos;s Guide
+          </span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm font-medium text-olive-700">
+        <nav className="flex items-center gap-5 text-sm font-medium text-olive-700">
           <Link href="/discover" className="hover:text-olive-950">
             Discover
           </Link>

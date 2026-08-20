@@ -73,14 +73,14 @@ export default function ProducersPage() {
       : "border-olive-300 bg-white text-olive-700 hover:bg-olive-50");
 
   return (
-    <div className="mt-4">
-      <h1 className="font-serif text-3xl font-bold text-olive-900">Producers</h1>
+    <div className="mt-6">
+      <h1 className="font-serif text-4xl font-bold text-olive-900">Producers</h1>
       <p className="mb-6 max-w-2xl text-olive-600">
         Every producer on Veritat, by country. Shops, restaurants and importers: filter
         by <strong>Wholesale</strong> to find producers who welcome trade enquiries.
       </p>
 
-      <div className="mb-6 space-y-4 rounded-2xl border border-olive-200 bg-white p-5">
+      <div className="card mb-8 space-y-4 p-6">
         <input
           className="input"
           placeholder="Search by name, country or region…"
@@ -144,10 +144,7 @@ export default function ProducersPage() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((p) => (
-              <div
-                key={p.id}
-                className="flex flex-col rounded-2xl border border-olive-200 bg-white p-5"
-              >
+              <div key={p.id} className="card card-hover flex flex-col p-5">
                 <div className="flex items-start gap-3">
                   {p.logo_url && (
                     // eslint-disable-next-line @next/next/no-img-element

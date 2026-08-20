@@ -1,27 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --paper: #faf7ef;
+}
+
 body {
   @apply bg-cream text-olive-950 antialiased;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background-image: radial-gradient(
+    ellipse at top,
+    rgba(174, 186, 130, 0.09),
+    transparent 60%
+  );
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  letter-spacing: -0.01em;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-full bg-olive-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-olive-800 disabled:opacity-50;
+  @apply inline-flex items-center justify-center rounded-full bg-olive-800 px-6 py-2.5 text-sm font-semibold tracking-wide text-white shadow-sm transition-all hover:bg-olive-900 hover:shadow-md disabled:opacity-50;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center rounded-full border border-olive-300 bg-white px-5 py-2.5 text-sm font-semibold text-olive-800 transition hover:bg-olive-50 disabled:opacity-50;
+  @apply inline-flex items-center justify-center rounded-full border border-olive-300 bg-white/80 px-6 py-2.5 text-sm font-semibold tracking-wide text-olive-800 transition-all hover:border-olive-400 hover:bg-white disabled:opacity-50;
 }
 
 .input {
-  @apply w-full rounded-lg border border-olive-200 bg-white px-3 py-2 text-sm text-olive-950 placeholder-olive-400 focus:border-olive-500 focus:outline-none focus:ring-1 focus:ring-olive-500;
+  @apply w-full rounded-xl border border-olive-200 bg-white px-3.5 py-2.5 text-sm text-olive-950 placeholder-olive-400 transition focus:border-olive-500 focus:outline-none focus:ring-2 focus:ring-olive-500/20;
 }
 
 .label {
-  @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-olive-600;
+  @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-olive-600;
 }
 
 .tag {
-  @apply inline-flex items-center rounded-full bg-olive-100 px-2.5 py-0.5 text-xs font-medium text-olive-800;
+  @apply inline-flex items-center rounded-full bg-olive-100 px-2.5 py-0.5 text-xs font-medium tracking-wide text-olive-800;
+}
+
+/* Editorial flourishes */
+.rule-ornament {
+  @apply flex items-center justify-center gap-3 text-olive-400;
+}
+.rule-ornament::before,
+.rule-ornament::after {
+  content: "";
+  @apply h-px w-12 bg-olive-300;
+}
+
+.card {
+  @apply rounded-2xl border border-olive-200/80 bg-white shadow-[0_1px_2px_rgba(58,66,39,0.04)] transition-all;
+}
+.card-hover {
+  @apply hover:-translate-y-1 hover:border-olive-300 hover:shadow-[0_12px_28px_-12px_rgba(58,66,39,0.25)];
+}
+
+.drop-cap::first-letter {
+  @apply float-left mr-2 mt-1 font-serif text-5xl font-bold leading-none text-olive-700;
 }
