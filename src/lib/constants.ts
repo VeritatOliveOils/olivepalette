@@ -27,7 +27,28 @@ export const CATEGORIES = ["extra virgin", "flavored / infused", "organic blend"
 
 export const PACKAGING_OPTIONS = ["glass", "tin", "bag-in-box"] as const;
 
-export const SHIPPING_REGIONS = ["US", "Canada", "EU", "UK", "Australia"] as const;
+export const SHIPPING_REGIONS = [
+  "US",
+  "Canada",
+  "Mexico",
+  "Caribbean",
+  "Central America",
+  "South America",
+  "EU",
+  "UK",
+  "Middle East",
+  "Africa",
+  "Asia",
+  "Australia / NZ",
+  "Worldwide",
+] as const;
+
+/** A producer who ships "Worldwide" matches every ships-to filter. */
+export function shipsTo(regions: string[] | null | undefined, target: string): boolean {
+  if (!regions || regions.length === 0) return false;
+  const lower = regions.map((r) => r.toLowerCase());
+  return lower.includes("worldwide") || lower.includes(target.toLowerCase());
+}
 
 /** Oils at or above this polyphenol level count as "high-polyphenol" (mg/kg). */
 export const HIGH_POLYPHENOL_THRESHOLD = 250;

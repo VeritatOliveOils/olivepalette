@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getSupabase } from "@/lib/supabase";
-import { SHIPPING_REGIONS } from "@/lib/constants";
+import { SHIPPING_REGIONS, shipsTo } from "@/lib/constants";
 import type { Producer } from "@/lib/types";
 
 interface ProducerRow extends Producer {
@@ -17,7 +17,7 @@ export default function ProducersPage() {
   const [country, setCountry] = useState<string | null>(null);
   const [womenLed, setWomenLed] = useState(false);
   const [wholesale, setWholesale] = useState(false);
-  const [shipsTo, setShipsTo] = useState<string | null>(null);
+  const [shipsToFilter, setShipsToFilter] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -52,11 +52,7 @@ export default function ProducersPage() {
     if (country && p.country !== country) return false;
     if (womenLed && !p.is_women_led) return false;
     if (wholesale && !p.wholesale_available) return false;
-    if (
-      shipsTo &&
-      !(p.shipping_regions ?? []).some((r) => r.toLowerCase() === shipsTo.toLowerCase())
-    )
-      return false;
+    if (shipsToFilter && !shipsTo(p.shipping_regions, shipsToFilter)) return false;
     if (!search.trim()) return true;
     const q = search.toLowerCase();
     return (
@@ -110,8 +106,8 @@ export default function ProducersPage() {
           {SHIPPING_REGIONS.map((r) => (
             <button
               key={r}
-              onClick={() => setShipsTo(shipsTo === r ? null : r)}
-              className={chip(shipsTo === r)}
+              onClick={() => setShipsToFilter(shipsToFilter === r ? null : r)}
+              className={chip(shipsToFilter === r)}
             >
               {r}
             </button>

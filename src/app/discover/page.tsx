@@ -8,6 +8,7 @@ import {
   HIGH_POLYPHENOL_THRESHOLD,
   INTENSITIES,
   SHIPPING_REGIONS,
+  shipsTo,
 } from "@/lib/constants";
 import type { Product } from "@/lib/types";
 
@@ -20,7 +21,7 @@ export default function DiscoverPage() {
   const [womenLed, setWomenLed] = useState(false);
   const [highPolyphenol, setHighPolyphenol] = useState(false);
   const [organic, setOrganic] = useState(false);
-  const [shipsTo, setShipsTo] = useState<string | null>(null);
+  const [shipsToFilter, setShipsToFilter] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -47,12 +48,7 @@ export default function DiscoverPage() {
       (p.polyphenols_ppm == null || p.polyphenols_ppm < HIGH_POLYPHENOL_THRESHOLD)
     )
       return false;
-    if (
-      shipsTo &&
-      !(p.producers?.shipping_regions ?? []).some(
-        (r) => r.toLowerCase() === shipsTo.toLowerCase()
-      )
-    )
+    if (shipsToFilter && !shipsTo(p.producers?.shipping_regions, shipsToFilter))
       return false;
     if (!search.trim()) return true;
     const q = search.toLowerCase();
@@ -106,10 +102,10 @@ export default function DiscoverPage() {
           {SHIPPING_REGIONS.map((r) => (
             <button
               key={r}
-              onClick={() => setShipsTo(shipsTo === r ? null : r)}
+              onClick={() => setShipsToFilter(shipsToFilter === r ? null : r)}
               className={
                 "rounded-full border px-3 py-1 text-sm transition " +
-                (shipsTo === r
+                (shipsToFilter === r
                   ? "border-olive-700 bg-olive-700 text-white"
                   : "border-olive-300 bg-white text-olive-700 hover:bg-olive-50")
               }
