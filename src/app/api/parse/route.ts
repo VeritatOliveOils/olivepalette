@@ -136,6 +136,29 @@ function extractJsonLd(
   return out;
 }
 
+/** Pull a JSON object out of a model reply, tolerating fences or stray words. */
+function extractJson(raw: string): Record<string, unknown> | null {
+  const cleaned = raw
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/```\s*$/, "")
+    .trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    /* fall through */
+  }
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start !== -1 && end > start) {
+    try {
+      return JSON.parse(cleaned.slice(start, end + 1));
+    } catch {
+      /* fall through */
+    }
+  }
+  return null;
+}
+
 /** Strip HTML down to readable text for the model. */
 function htmlToText(html: string): string {
   return html
@@ -281,7 +304,7 @@ export async function POST(req: NextRequest) {
     try {
       const msg = await anthropicVision.messages.create({
         model: "claude-sonnet-4-5",
-        max_tokens: 1500,
+        max_tokens: 4000,
         system:
           SYSTEM +
           `\n\nYou are being shown photographs of an olive oil bottle's label(s). Read ONLY what is actually printed on the label. Labels may be in any language — translate field values into English where sensible (e.g. "raccolta" = harvest, "acidità" = acidity). If a value is blurry or unreadable, omit that field rather than guessing. Pay special attention to the harvest/milling date, acidity, polyphenol content, lot number, volume, and cultivar names.`,
@@ -316,9 +339,7 @@ export async function POST(req: NextRequest) {
         .filter((b): b is Anthropic.TextBlock => b.type === "text")
         .map((b) => b.text)
         .join("");
-      const parsed = JSON.parse(
-        raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "")
-      );
+      const parsed = extractJson(raw);
 
       if (!parsed || Object.keys(parsed).length === 0) {
         return NextResponse.json(
@@ -391,8 +412,7 @@ export async function POST(req: NextRequest) {
       .map((b) => b.text)
       .join("");
 
-    const jsonText = raw.replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "");
-    const parsed = JSON.parse(jsonText);
+    const parsed = extractJson(raw);
 
     if (!parsed || Object.keys(parsed).length === 0) {
       return NextResponse.json(
@@ -419,8 +439,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ parsed, fetchedFrom: fetchedFrom ?? null });
   } catch (e) {
     console.error("Parse error:", e);
+    const detail =
+      e instanceof Error && e.message ? ` (${e.message.slice(0, 120)})` : "";
     return NextResponse.json(
-      { error: "Could not parse that text. You can still fill the form manually." },
+      {
+        error: `We couldn't read that page${detail}. Try copying the product description text and pasting that instead.`,
+      },
       { status: 500 }
     );
   }
