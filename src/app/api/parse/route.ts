@@ -191,15 +191,23 @@ async function maybeFetchUrl(input: string): Promise<{
     const res = await fetch(target.toString(), {
       signal: controller.signal,
       headers: {
+        // Many shop platforms (Shopify especially) reject unfamiliar bots,
+        // so we identify as a normal browser fetching a page.
         "User-Agent":
-          "Mozilla/5.0 (compatible; VeritatBot/1.0; +https://veritat.com)",
-        Accept: "text/html,application/xhtml+xml",
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
       },
       redirect: "follow",
     });
     clearTimeout(timer);
     if (!res.ok) {
-      return { text: input, error: `That page returned an error (${res.status}).` };
+      return {
+        text: input,
+        error: `That page wouldn't open for us (error ${res.status}).`,
+      };
     }
     const html = await res.text();
     const finalUrl = res.url || target.toString();
