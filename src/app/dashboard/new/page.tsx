@@ -10,7 +10,8 @@ import {
   INTENSITY_LABELS,
   PACKAGING_OPTIONS,
 } from "@/lib/constants";
-import type { ParsedProduct } from "@/lib/types";
+import AwardsEditor from "@/components/AwardsEditor";
+import type { Award, ParsedProduct } from "@/lib/types";
 
 type Draft = {
   name: string;
@@ -37,6 +38,7 @@ type Draft = {
   image_url: string;
   organic: boolean;
   awards: string;
+  awards_json: Award[];
   acidity: string;
 };
 
@@ -65,6 +67,7 @@ const EMPTY: Draft = {
   image_url: "",
   organic: false,
   awards: "",
+  awards_json: [],
   acidity: "",
 };
 
@@ -135,6 +138,7 @@ function NewProductForm() {
           image_url: p.image_url ?? "",
           organic: !!p.organic,
           awards: p.awards ?? "",
+          awards_json: (p.awards_json as Award[]) ?? [],
           acidity: p.acidity ?? "",
         });
       }
@@ -311,6 +315,7 @@ function NewProductForm() {
         image_url: p.image_url ?? "",
         organic: !!p.organic,
         awards: p.awards ?? "",
+        awards_json: (p.awards_json ?? []).map((a) => ({ ...a, verified: false })),
         acidity: p.acidity ?? "",
       });
       setStep("review");
@@ -379,6 +384,7 @@ function NewProductForm() {
         image_url: draft.image_url.trim() || null,
         organic: draft.organic,
         awards: draft.awards.trim() || null,
+        awards_json: draft.awards_json.filter((a) => a.competition.trim()),
         acidity: draft.acidity.trim() || null,
       };
       const { error } = editId
@@ -753,9 +759,10 @@ function NewProductForm() {
             />
           </div>
           <div>
-            <label className="label">Awards</label>
+            <label className="label">Other recognition (optional, free text)</label>
             <input
               className={"input" + wasFilled("awards")}
+              placeholder="Anything without a link"
               value={draft.awards}
               onChange={(e) => setDraft({ ...draft, awards: e.target.value })}
             />
@@ -865,6 +872,13 @@ function NewProductForm() {
               </p>
             )}
           </div>
+        </div>
+
+        <div className="border-t border-olive-100 pt-6">
+          <AwardsEditor
+            awards={draft.awards_json}
+            onChange={(awards_json) => setDraft({ ...draft, awards_json })}
+          />
         </div>
 
         {saveError && <p className="text-sm text-red-700">{saveError}</p>}

@@ -111,6 +111,39 @@ export default async function ProducerPage({
         </div>
       )}
 
+      {(producer.press?.length ?? 0) > 0 && (
+        <div className="mt-8 max-w-3xl">
+          <h2 className="mb-3 font-serif text-2xl font-bold text-olive-900">
+            In the press
+          </h2>
+          <ul className="space-y-2">
+            {producer.press.map((p, i) => (
+              <li
+                key={i}
+                className="flex flex-wrap items-baseline gap-x-2 rounded-xl border border-olive-200 bg-white px-4 py-3 text-sm"
+              >
+                <span className="font-semibold text-olive-900">{p.outlet}</span>
+                {p.date && <span className="text-olive-500">{p.date}</span>}
+                {p.title && <span className="italic text-olive-700">“{p.title}”</span>}
+                {p.verified && (
+                  <span className="tag !bg-olive-800 !text-white">✓ verified</span>
+                )}
+                {p.url && (
+                  <a
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-auto text-xs font-medium text-olive-700 underline"
+                  >
+                    Read it ↗
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {producer.story && (
         <div className="mt-8 max-w-3xl">
           <h2 className="mb-2 font-serif text-2xl font-bold text-olive-900">Our story</h2>

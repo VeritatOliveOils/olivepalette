@@ -36,7 +36,14 @@ Return ONLY a JSON object (no markdown fences, no commentary) with any of these 
   "price_usd": number,
   "buy_url": string,              // full URL if present
   "organic": boolean,             // true ONLY if explicitly certified/stated
-  "awards": string,               // awards/medals mentioned, comma-separated
+  "awards_json": [                // competition awards, one object each
+    { "competition": string,      // e.g. "NYIOOC World Olive Oil Competition"
+      "year": number,
+      "category": string,         // class/varietal/country if stated
+      "award": string,            // "Gold", "Silver", "3 stars", "Best in Class"…
+      "url": string }             // link to the result ONLY if the page gives one
+  ],
+  "awards": string,               // any recognition that doesn't fit above
   "acidity": string               // e.g. "0.2%"
 }`;
 

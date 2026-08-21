@@ -161,7 +161,7 @@ export default async function OilPage({
           )}
           {product.awards && (
             <>
-              <dt className="font-semibold text-olive-500">Awards</dt>
+              <dt className="font-semibold text-olive-500">Recognition</dt>
               <dd className="text-olive-900">{product.awards}</dd>
             </>
           )}
@@ -172,6 +172,46 @@ export default async function OilPage({
             </>
           )}
         </dl>
+
+        {(product.awards_json?.length ?? 0) > 0 && (
+          <div className="mt-6">
+            <h2 className="mb-2 font-serif text-lg font-bold text-olive-900">
+              Awards
+            </h2>
+            <ul className="space-y-2">
+              {product.awards_json.map((a, i) => (
+                <li
+                  key={i}
+                  className="flex flex-wrap items-baseline gap-x-2 rounded-xl border border-olive-200 bg-white px-4 py-3 text-sm"
+                >
+                  {a.award && (
+                    <span className="font-serif text-base font-bold text-gold">
+                      {a.award}
+                    </span>
+                  )}
+                  <span className="font-semibold text-olive-900">{a.competition}</span>
+                  {a.year && <span className="text-olive-600">{a.year}</span>}
+                  {a.category && (
+                    <span className="text-olive-500">· {a.category}</span>
+                  )}
+                  {a.verified ? (
+                    <span className="tag !bg-olive-800 !text-white">✓ verified</span>
+                  ) : null}
+                  {a.url && (
+                    <a
+                      href={a.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-auto text-xs font-medium text-olive-700 underline"
+                    >
+                      See the result ↗
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-8 flex items-center gap-4">
           {product.price_usd != null && (

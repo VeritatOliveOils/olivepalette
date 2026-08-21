@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
-import type { ClickEvent, Product } from "@/lib/types";
+import type { Award, ClickEvent, Product } from "@/lib/types";
 
 type Range = 7 | 30;
 
@@ -76,6 +76,20 @@ export default function AdminPage() {
     const supabase = getSupabase();
     await supabase.from("products").update({ status }).eq("id", id);
     setPending((p) => p.filter((x) => x.id !== id));
+  }
+
+  /** Mark one award on one product as checked-and-genuine. */
+  async function toggleAwardVerified(productId: string, index: number) {
+    const product = pending.find((p) => p.id === productId);
+    if (!product) return;
+    const next: Award[] = (product.awards_json ?? []).map((a, i) =>
+      i === index ? { ...a, verified: !a.verified } : a
+    );
+    const supabase = getSupabase();
+    await supabase.from("products").update({ awards_json: next }).eq("id", productId);
+    setPending((prev) =>
+      prev.map((p) => (p.id === productId ? { ...p, awards_json: next } : p))
+    );
   }
 
   if (isAdmin === null)
@@ -172,6 +186,49 @@ export default function AdminPage() {
                   >
                     Check buy link ↗
                   </a>
+                )}
+
+                {(p.awards_json?.length ?? 0) > 0 && (
+                  <div className="mt-3 rounded-xl border border-olive-200 bg-olive-50 p-3">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-olive-600">
+                      Awards to check
+                    </p>
+                    <ul className="space-y-2">
+                      {p.awards_json.map((a, i) => (
+                        <li key={i} className="flex flex-wrap items-center gap-2 text-sm">
+                          <span className="text-olive-900">
+                            {[a.award, a.competition, a.year, a.category]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </span>
+                          {a.url ? (
+                            <a
+                              href={a.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-olive-700 underline"
+                            >
+                              open result ↗
+                            </a>
+                          ) : (
+                            <span className="text-xs text-red-700">no link given</span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => toggleAwardVerified(p.id, i)}
+                            className={
+                              "ml-auto rounded-full border px-3 py-0.5 text-xs transition " +
+                              (a.verified
+                                ? "border-olive-700 bg-olive-700 text-white"
+                                : "border-olive-300 bg-white text-olive-700 hover:bg-olive-100")
+                            }
+                          >
+                            {a.verified ? "✓ verified" : "mark verified"}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
               </div>
             ))}

@@ -1,4 +1,23 @@
 export type Intensity = "delicate" | "medium" | "robust";
+
+/** A competition award, with a link so it can be checked. */
+export interface Award {
+  competition: string;
+  year?: number | null;
+  category?: string | null;
+  award?: string | null; // "Gold", "Silver", "3 stars", "Best in Class"…
+  url?: string | null; // link to the result on the competition's own site
+  verified?: boolean; // set by the curator after checking the link
+}
+
+/** Press coverage for a producer. */
+export interface PressItem {
+  outlet: string;
+  title?: string | null;
+  date?: string | null;
+  url?: string | null;
+  verified?: boolean;
+}
 export type ProductStatus = "pending" | "approved" | "rejected";
 
 export interface Producer {
@@ -16,6 +35,7 @@ export interface Producer {
   wholesale_available: boolean;
   trade_contact_email: string | null;
   trade_notes: string | null;
+  press: PressItem[];
   created_at: string;
 }
 
@@ -46,7 +66,8 @@ export interface Product {
   buy_url: string | null;
   image_url: string | null;
   organic: boolean;
-  awards: string | null;
+  awards: string | null; // legacy free-text, kept for older listings
+  awards_json: Award[];
   acidity: string | null;
   created_at: string;
   producers?: Producer;
@@ -91,5 +112,6 @@ export interface ParsedProduct {
   image_url?: string;
   organic?: boolean;
   awards?: string;
+  awards_json?: Award[];
   acidity?: string;
 }

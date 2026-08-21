@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import { SHIPPING_REGIONS } from "@/lib/constants";
-import type { Producer, Product } from "@/lib/types";
+import PressEditor from "@/components/PressEditor";
+import type { PressItem, Producer, Product } from "@/lib/types";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function DashboardPage() {
     wholesale_available: false,
     trade_contact_email: "",
     trade_notes: "",
+    press: [] as PressItem[],
     story: "",
   });
 
@@ -67,6 +69,7 @@ export default function DashboardPage() {
           wholesale_available: !!prod.wholesale_available,
           trade_contact_email: prod.trade_contact_email ?? "",
           trade_notes: prod.trade_notes ?? "",
+          press: (prod.press as PressItem[]) ?? [],
           story: prod.story ?? "",
         });
         const { data: prods } = await supabase
@@ -98,6 +101,7 @@ export default function DashboardPage() {
         wholesale_available: profileDraft.wholesale_available,
         trade_contact_email: profileDraft.trade_contact_email.trim() || null,
         trade_notes: profileDraft.trade_notes.trim() || null,
+        press: profileDraft.press.filter((p) => p.outlet.trim()),
         story: profileDraft.story.trim() || null,
       })
       .eq("id", producer.id)
@@ -325,6 +329,13 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
+            <div className="sm:col-span-2">
+              <PressEditor
+                press={profileDraft.press}
+                onChange={(press) => setProfileDraft({ ...profileDraft, press })}
+              />
+            </div>
+
             <div className="sm:col-span-2">
               <label className="label">Your story (shown on your public page)</label>
               <textarea
