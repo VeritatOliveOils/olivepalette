@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Nav />
-        <main className="mx-auto min-h-screen max-w-6xl px-4 pb-20 pt-6">
+        <main className="mx-auto min-h-screen max-w-6xl px-4 pb-16 pt-4 sm:pb-20 sm:pt-6">
           {children}
         </main>
         <footer className="border-t border-olive-200 bg-white">

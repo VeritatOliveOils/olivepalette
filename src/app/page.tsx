@@ -23,7 +23,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative mt-6 overflow-hidden rounded-[2rem] bg-olive-900 px-6 py-20 text-center text-white sm:px-12 sm:py-28">
+      <section className="relative mt-4 overflow-hidden rounded-3xl bg-olive-900 px-5 py-14 text-center text-white sm:mt-6 sm:rounded-[2rem] sm:px-12 sm:py-28">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.18]"
@@ -36,12 +36,12 @@ export default async function HomePage() {
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-olive-200">
             The Olive Oil Buyer&apos;s Guide
           </p>
-          <h1 className="mx-auto max-w-3xl font-serif text-5xl font-bold leading-[1.05] sm:text-7xl">
+          <h1 className="mx-auto max-w-3xl font-serif text-4xl font-bold leading-[1.08] sm:text-7xl">
             Find real
             <br />
             olive oil.
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-olive-100">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-olive-100 sm:mt-6 sm:text-lg">
             Most bottles won&apos;t tell you when the olives were picked. Every oil here
             will — certified by an olive oil sommelier, and sold direct by the family who
             made it.
@@ -66,7 +66,7 @@ export default async function HomePage() {
       {/* The problem — editorial statement */}
       <section className="mx-auto mt-20 max-w-3xl text-center">
         <div className="rule-ornament mb-6">🫒</div>
-        <p className="font-serif text-2xl leading-relaxed text-olive-800 sm:text-3xl">
+        <p className="px-2 font-serif text-xl leading-relaxed text-olive-800 sm:text-3xl">
           Most bottles labelled <em>extra virgin</em> can&apos;t tell you when the olives
           were picked. Ours can — or they don&apos;t get listed.
         </p>

@@ -1,0 +1,19 @@
+# Never commit secrets
+.env
+.env.local
+.env*.local
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+build/
+
+# Logs and OS clutter
+*.log
+npm-debug.log*
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
