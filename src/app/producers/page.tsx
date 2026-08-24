@@ -30,11 +30,12 @@ export default function ProducersPage() {
       (oils ?? []).forEach((o: { producer_id: string }) =>
         counts.set(o.producer_id, (counts.get(o.producer_id) ?? 0) + 1)
       );
+      // Only show producers with at least one certified oil. Empty profiles —
+      // including spam signups — never appear in the public directory.
       setProducers(
-        ((prods as Producer[]) ?? []).map((p) => ({
-          ...p,
-          oil_count: counts.get(p.id) ?? 0,
-        }))
+        ((prods as Producer[]) ?? [])
+          .map((p) => ({ ...p, oil_count: counts.get(p.id) ?? 0 }))
+          .filter((p) => p.oil_count > 0)
       );
       setLoading(false);
     })();

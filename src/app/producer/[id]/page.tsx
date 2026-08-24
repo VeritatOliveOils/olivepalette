@@ -27,6 +27,10 @@ export default async function ProducerPage({
   if (!producer) notFound();
   const products = (productsData as Product[]) ?? [];
 
+  // A profile with no certified oils isn't a public page yet — this also means
+  // spam or half-finished signups can't be browsed or indexed by search engines.
+  if (products.length === 0 && !producer.story) notFound();
+
   return (
     <div className="mt-6">
       <div className="rounded-3xl bg-olive-800 px-8 py-12 text-white">
