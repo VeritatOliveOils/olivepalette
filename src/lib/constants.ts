@@ -53,6 +53,33 @@ export function shipsTo(regions: string[] | null | undefined, target: string): b
 /** Oils at or above this polyphenol level count as "high-polyphenol" (mg/kg). */
 export const HIGH_POLYPHENOL_THRESHOLD = 250;
 
+export const CURRENCIES = [
+  { code: "USD", symbol: "$", label: "US Dollar" },
+  { code: "EUR", symbol: "€", label: "Euro" },
+  { code: "GBP", symbol: "£", label: "British Pound" },
+  { code: "CAD", symbol: "CA$", label: "Canadian Dollar" },
+  { code: "AUD", symbol: "A$", label: "Australian Dollar" },
+  { code: "TRY", symbol: "₺", label: "Turkish Lira" },
+  { code: "ZAR", symbol: "R", label: "South African Rand" },
+  { code: "MXN", symbol: "MX$", label: "Mexican Peso" },
+  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
+  { code: "CHF", symbol: "CHF", label: "Swiss Franc" },
+] as const;
+
+/** Format a price in the producer's own currency. */
+export function formatPrice(
+  amount: number | string | null | undefined,
+  currency?: string | null
+): string | null {
+  if (amount === null || amount === undefined || amount === "") return null;
+  const n = Number(amount);
+  if (Number.isNaN(n)) return null;
+  const code = (currency || "USD").toUpperCase();
+  const found = CURRENCIES.find((c) => c.code === code);
+  const decimals = code === "JPY" ? 0 : 2;
+  return `${found?.symbol ?? code + " "}${n.toFixed(decimals)}`;
+}
+
 /** Suggestions only — producers can type any competition name. */
 export const COMPETITIONS = [
   "NYIOOC World Olive Oil Competition",

@@ -33,7 +33,8 @@ Return ONLY a JSON object (no markdown fences, no commentary) with any of these 
   "polyphenols_ppm": number,      // mg/kg (ppm) if stated
   "size_ml": number,              // convert oz to ml if needed (1 oz = 29.57 ml)
   "packaging": string,            // "glass", "tin", or "bag-in-box" if stated
-  "price_usd": number,
+  "price_usd": number,            // the number only, in whatever currency the page shows
+  "currency": string,             // ISO code of that price: "USD", "EUR", "GBP", "TRY"…
   "buy_url": string,              // full URL if present
   "organic": boolean,             // true ONLY if explicitly certified/stated
   "awards_json": [                // competition awards, one object each
@@ -428,12 +429,9 @@ export async function POST(req: NextRequest) {
     if (fetchedFrom && !parsed.buy_url) parsed.buy_url = fetchedFrom;
     // Product photo and price come straight from the page's own metadata — no guessing
     if (pageImage && !parsed.image_url) parsed.image_url = pageImage;
-    if (
-      pagePrice !== undefined &&
-      parsed.price_usd === undefined &&
-      (!pageCurrency || pageCurrency.toUpperCase() === "USD")
-    ) {
+    if (pagePrice !== undefined && parsed.price_usd === undefined) {
       parsed.price_usd = pagePrice;
+      if (pageCurrency) parsed.currency = pageCurrency.toUpperCase();
     }
 
     return NextResponse.json({ parsed, fetchedFrom: fetchedFrom ?? null });

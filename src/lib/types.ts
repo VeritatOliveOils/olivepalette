@@ -62,7 +62,8 @@ export interface Product {
   polyphenols_ppm: number | null;
   size_ml: number | null;
   packaging: string | null;
-  price_usd: number | null;
+  price_usd: number | null; // the number; currency below says what it's in
+  currency: string;
   buy_url: string | null;
   image_url: string | null;
   organic: boolean;
@@ -108,6 +109,7 @@ export interface ParsedProduct {
   size_ml?: number;
   packaging?: string;
   price_usd?: number;
+  currency?: string;
   buy_url?: string;
   image_url?: string;
   organic?: boolean;

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 import {
   CATEGORIES,
+  CURRENCIES,
   FLAVOR_TAGS,
   INTENSITIES,
   INTENSITY_LABELS,
@@ -34,6 +35,7 @@ type Draft = {
   size_ml: string;
   packaging: string;
   price_usd: string;
+  currency: string;
   buy_url: string;
   image_url: string;
   organic: boolean;
@@ -63,6 +65,7 @@ const EMPTY: Draft = {
   size_ml: "",
   packaging: "",
   price_usd: "",
+  currency: "USD",
   buy_url: "",
   image_url: "",
   organic: false,
@@ -134,6 +137,7 @@ function NewProductForm() {
           size_ml: p.size_ml?.toString() ?? "",
           packaging: p.packaging ?? "",
           price_usd: p.price_usd?.toString() ?? "",
+          currency: p.currency ?? "USD",
           buy_url: p.buy_url ?? "",
           image_url: p.image_url ?? "",
           organic: !!p.organic,
@@ -311,6 +315,7 @@ function NewProductForm() {
         size_ml: p.size_ml?.toString() ?? "",
         packaging: p.packaging ?? "",
         price_usd: p.price_usd?.toString() ?? "",
+        currency: p.currency ?? "USD",
         buy_url: p.buy_url ?? "",
         image_url: p.image_url ?? "",
         organic: !!p.organic,
@@ -380,6 +385,7 @@ function NewProductForm() {
         size_ml: num(draft.size_ml),
         packaging: draft.packaging || null,
         price_usd: num(draft.price_usd),
+        currency: draft.currency || "USD",
         buy_url: draft.buy_url.trim() || null,
         image_url: draft.image_url.trim() || null,
         organic: draft.organic,
@@ -390,10 +396,22 @@ function NewProductForm() {
       const { error } = editId
         ? await supabase.from("products").update(row).eq("id", editId)
         : await supabase.from("products").insert(row);
-      if (error) throw error;
+      if (error) {
+        // Supabase errors aren't Error instances — surface the real detail
+        throw new Error(
+          [error.message, error.details, error.hint].filter(Boolean).join(" · ") ||
+            "The database refused the save."
+        );
+      }
       router.push("/dashboard");
     } catch (e) {
-      setSaveError(e instanceof Error ? e.message : "Could not save.");
+      setSaveError(
+        e instanceof Error
+          ? e.message
+          : typeof e === "object" && e !== null && "message" in e
+            ? String((e as { message: unknown }).message)
+            : "Could not save."
+      );
     } finally {
       setSaving(false);
     }
@@ -794,13 +812,30 @@ function NewProductForm() {
             </select>
           </div>
           <div>
-            <label className="label">Price (USD)</label>
-            <input
-              className={"input" + wasFilled("price_usd")}
-              inputMode="decimal"
-              value={draft.price_usd}
-              onChange={(e) => setDraft({ ...draft, price_usd: e.target.value })}
-            />
+            <label className="label">Price</label>
+            <div className="flex gap-2">
+              <select
+                className="input !w-28"
+                value={draft.currency}
+                onChange={(e) => setDraft({ ...draft, currency: e.target.value })}
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.symbol} {c.code}
+                  </option>
+                ))}
+              </select>
+              <input
+                className={"input" + wasFilled("price_usd")}
+                inputMode="decimal"
+                placeholder="49.50"
+                value={draft.price_usd}
+                onChange={(e) => setDraft({ ...draft, price_usd: e.target.value })}
+              />
+            </div>
+            <p className="mt-1 text-xs text-olive-500">
+              Price it in your own currency — buyers see it as you sell it.
+            </p>
           </div>
           <div>
             <label className="label">Acidity</label>

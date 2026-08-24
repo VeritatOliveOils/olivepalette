@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatPrice } from "@/lib/constants";
 import type { Product } from "@/lib/types";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -50,7 +51,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="mt-auto flex items-baseline justify-between border-t border-olive-100 pt-4">
         <span className="font-serif text-xl font-bold text-olive-900">
-          {product.price_usd != null ? `$${Number(product.price_usd).toFixed(2)}` : "—"}
+          {formatPrice(product.price_usd, product.currency) ?? "—"}
         </span>
         {product.size_ml != null && (
           <span className="text-xs text-olive-500">{product.size_ml}ml</span>

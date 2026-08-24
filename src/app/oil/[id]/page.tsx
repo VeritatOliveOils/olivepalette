@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getServerSupabase } from "@/lib/supabase";
 import TasteProfile from "@/components/TasteProfile";
 import OilQrCode from "@/components/OilQrCode";
-import { HIGH_POLYPHENOL_THRESHOLD } from "@/lib/constants";
+import { formatPrice, HIGH_POLYPHENOL_THRESHOLD } from "@/lib/constants";
 import type { Product } from "@/lib/types";
 
 export const revalidate = 60;
@@ -216,7 +216,7 @@ export default async function OilPage({
         <div className="mt-8 flex items-center gap-4">
           {product.price_usd != null && (
             <span className="font-serif text-3xl font-bold text-olive-900">
-              ${Number(product.price_usd).toFixed(2)}
+              {formatPrice(product.price_usd, product.currency)}
             </span>
           )}
           {product.buy_url ? (
