@@ -9,6 +9,7 @@ import {
   FLAVOR_TAGS,
   INTENSITIES,
   INTENSITY_LABELS,
+  normalizeUrl,
   PACKAGING_OPTIONS,
 } from "@/lib/constants";
 import AwardsEditor from "@/components/AwardsEditor";
@@ -386,8 +387,8 @@ function NewProductForm() {
         packaging: draft.packaging || null,
         price_usd: num(draft.price_usd),
         currency: draft.currency || "USD",
-        buy_url: draft.buy_url.trim() || null,
-        image_url: draft.image_url.trim() || null,
+        buy_url: normalizeUrl(draft.buy_url),
+        image_url: normalizeUrl(draft.image_url),
         organic: draft.organic,
         awards: draft.awards.trim() || null,
         awards_json: draft.awards_json.filter((a) => a.competition.trim()),

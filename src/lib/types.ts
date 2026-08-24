@@ -23,8 +23,9 @@ export type ProductStatus = "pending" | "approved" | "rejected";
 export interface Producer {
   id: string;
   name: string;
-  region: string | null;
-  country: string | null;
+  region: string | null; // growing region, e.g. "Priorat"
+  country: string | null; // country where the olives grow, e.g. "Spain"
+  ships_from: string | null; // business base / despatch country, if different
   story: string | null;
   website: string | null;
   instagram_url: string | null;

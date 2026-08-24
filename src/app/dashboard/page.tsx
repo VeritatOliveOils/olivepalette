@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
-import { SHIPPING_REGIONS } from "@/lib/constants";
+import { normalizeUrl, SHIPPING_REGIONS } from "@/lib/constants";
 import PressEditor from "@/components/PressEditor";
 import type { PressItem, Producer, Product } from "@/lib/types";
 
@@ -18,6 +18,7 @@ export default function DashboardPage() {
     name: "",
     region: "",
     country: "",
+    ships_from: "",
     website: "",
     instagram_url: "",
     logo_url: "",
@@ -60,6 +61,7 @@ export default function DashboardPage() {
           name: prod.name ?? "",
           region: prod.region ?? "",
           country: prod.country ?? "",
+          ships_from: prod.ships_from ?? "",
           website: prod.website ?? "",
           instagram_url: prod.instagram_url ?? "",
           logo_url: prod.logo_url ?? "",
@@ -92,9 +94,10 @@ export default function DashboardPage() {
         name: profileDraft.name.trim() || producer.name,
         region: profileDraft.region.trim() || null,
         country: profileDraft.country.trim() || null,
-        website: profileDraft.website.trim() || null,
-        instagram_url: profileDraft.instagram_url.trim() || null,
-        logo_url: profileDraft.logo_url.trim() || null,
+        ships_from: profileDraft.ships_from.trim() || null,
+        website: normalizeUrl(profileDraft.website),
+        instagram_url: normalizeUrl(profileDraft.instagram_url),
+        logo_url: normalizeUrl(profileDraft.logo_url),
         shipping_regions: profileDraft.shipping_regions,
         certifications_text: profileDraft.certifications_text.trim() || null,
         is_women_led: profileDraft.is_women_led,
@@ -180,21 +183,39 @@ export default function DashboardPage() {
               />
             </div>
             <div>
-              <label className="label">Region</label>
+              <label className="label">Growing region — where the olives grow</label>
               <input
                 className="input"
-                placeholder="e.g. Central Valley, California"
+                placeholder="e.g. Priorat, or Central Valley"
                 value={profileDraft.region}
                 onChange={(e) => setProfileDraft({ ...profileDraft, region: e.target.value })}
               />
             </div>
             <div>
-              <label className="label">Country</label>
+              <label className="label">Country of origin — where the olives grow</label>
               <input
                 className="input"
+                placeholder="e.g. Spain"
                 value={profileDraft.country}
                 onChange={(e) => setProfileDraft({ ...profileDraft, country: e.target.value })}
               />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">
+                Ships from (only if your business is based elsewhere)
+              </label>
+              <input
+                className="input"
+                placeholder="e.g. UK — leave blank if you ship from the country above"
+                value={profileDraft.ships_from}
+                onChange={(e) =>
+                  setProfileDraft({ ...profileDraft, ships_from: e.target.value })
+                }
+              />
+              <p className="mt-1 text-xs text-olive-500">
+                Buyers care about both: where the oil comes from, and where the parcel
+                comes from.
+              </p>
             </div>
             <div>
               <label className="label">Instagram URL</label>

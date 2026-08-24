@@ -46,6 +46,9 @@ export default async function ProducerPage({
             <h1 className="mt-1 font-serif text-4xl font-bold">{producer.name}</h1>
             <p className="mt-1 text-olive-200">
               {[producer.region, producer.country].filter(Boolean).join(", ")}
+              {producer.ships_from ? (
+                <span className="text-olive-300"> · ships from {producer.ships_from}</span>
+              ) : null}
             </p>
           </div>
         </div>

@@ -66,6 +66,18 @@ export const CURRENCIES = [
   { code: "CHF", symbol: "CHF", label: "Swiss Franc" },
 ] as const;
 
+/**
+ * Producers type "mysite.com" as often as "https://mysite.com".
+ * Without a scheme the browser treats it as a path on Veritat and 404s.
+ */
+export function normalizeUrl(value: string | null | undefined): string | null {
+  const v = (value ?? "").trim();
+  if (!v) return null;
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/^(mailto:|tel:)/i.test(v)) return v;
+  return `https://${v.replace(/^\/+/, "")}`;
+}
+
 /** Format a price in the producer's own currency. */
 export function formatPrice(
   amount: number | string | null | undefined,
