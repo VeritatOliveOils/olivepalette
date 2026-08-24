@@ -1,8 +1,11 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
+import Faq from "@/components/Faq";
+import { PRODUCER_FAQ } from "@/lib/faq-content";
 
 function LoginForm() {
   const params = useSearchParams();
@@ -48,6 +51,7 @@ function LoginForm() {
   }
 
   return (
+    <>
     <div className="mx-auto mt-10 max-w-md rounded-2xl border border-olive-200 bg-white p-8">
       <h1 className="mb-1 font-serif text-2xl font-bold text-olive-900">
         {mode === "signup" ? "Join as a Producer" : "Welcome back"}
@@ -104,6 +108,25 @@ function LoginForm() {
           : "New producer? Create an account"}
       </button>
     </div>
+
+    {mode === "signup" && (
+      <section className="mx-auto mt-12 max-w-2xl">
+        <h2 className="mb-4 text-center font-serif text-2xl font-bold text-olive-900">
+          Before you join
+        </h2>
+        <Faq items={PRODUCER_FAQ.slice(0, 5)} />
+        <p className="mt-4 text-center text-sm text-olive-600">
+          <Link href="/example" className="font-semibold underline">
+            See what a finished listing looks like
+          </Link>{" "}
+          ·{" "}
+          <Link href="/faq" className="font-semibold underline">
+            All questions
+          </Link>
+        </p>
+      </section>
+    )}
+    </>
   );
 }
 

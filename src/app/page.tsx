@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getServerSupabase } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
+import Faq from "@/components/Faq";
+import { BUYER_FAQ } from "@/lib/faq-content";
 import type { Product } from "@/lib/types";
 
 export const revalidate = 60;
@@ -151,6 +153,29 @@ export default async function HomePage() {
               <p className="mt-2 text-sm leading-relaxed text-olive-600">{f.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Buyer questions — the guide part of the Buyer's Guide */}
+      <section className="mt-24">
+        <div className="mb-6 text-center">
+          <h2 className="font-serif text-3xl font-bold text-olive-900">
+            Before you buy a bottle
+          </h2>
+          <p className="mt-2 text-olive-600">
+            The questions shoppers ask us most, answered plainly.
+          </p>
+        </div>
+        <div className="mx-auto max-w-3xl">
+          <Faq items={BUYER_FAQ.slice(0, 6)} />
+          <div className="mt-5 text-center">
+            <Link
+              href="/faq"
+              className="text-sm font-semibold text-olive-700 hover:underline"
+            >
+              Read all the answers →
+            </Link>
+          </div>
         </div>
       </section>
 

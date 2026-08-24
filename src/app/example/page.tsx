@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import TasteProfile from "@/components/TasteProfile";
+import Faq from "@/components/Faq";
+import { PRODUCER_FAQ } from "@/lib/faq-content";
 
 export const metadata: Metadata = {
   title: "What a great listing looks like — Veritat",
@@ -179,6 +181,14 @@ export default function ExamplePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Producer questions */}
+      <section className="mx-auto mt-20 max-w-3xl">
+        <h2 className="mb-6 text-center font-serif text-3xl font-bold text-olive-900">
+          Questions producers ask
+        </h2>
+        <Faq items={PRODUCER_FAQ} schema />
       </section>
 
       {/* CTA */}

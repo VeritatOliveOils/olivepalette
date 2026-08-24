@@ -56,6 +56,11 @@ export default function RootLayout({
                         Producers
                       </a>
                     </li>
+                    <li>
+                      <a href="/faq" className="hover:underline">
+                        Olive oil guide
+                      </a>
+                    </li>
                   </ul>
                 </div>
                 <div>
