@@ -61,6 +61,11 @@ export default function RootLayout({
                         Olive oil guide
                       </a>
                     </li>
+                    <li>
+                      <a href="/journal" className="hover:underline">
+                        The Olive Vine
+                      </a>
+                    </li>
                   </ul>
                 </div>
                 <div>

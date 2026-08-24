@@ -43,6 +43,12 @@ export default function Nav() {
             Producers
           </Link>
           <Link
+            href="/journal"
+            className="hidden min-h-11 items-center px-1 hover:text-olive-950 sm:flex"
+          >
+            Journal
+          </Link>
+          <Link
             href="/faq"
             className="hidden min-h-11 items-center px-1 hover:text-olive-950 sm:flex"
           >
