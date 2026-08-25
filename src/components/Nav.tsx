@@ -43,16 +43,16 @@ export default function Nav() {
             Producers
           </Link>
           <Link
-            href="/journal"
+            href="/blog"
             className="hidden min-h-11 items-center px-1 hover:text-olive-950 sm:flex"
           >
-            Journal
+            Blog
           </Link>
           <Link
             href="/faq"
             className="hidden min-h-11 items-center px-1 hover:text-olive-950 sm:flex"
           >
-            Guide
+            FAQs
           </Link>
           {loggedIn ? (
             <Link
@@ -73,8 +73,8 @@ export default function Nav() {
                 href="/login?mode=signup"
                 className="btn-primary min-h-11 !px-4 !py-2 !text-xs sm:!px-6 sm:!text-sm"
               >
-                <span className="sm:hidden">Join</span>
-                <span className="hidden sm:inline">For Producers</span>
+                <span className="sm:hidden">List&nbsp;oil</span>
+                <span className="hidden sm:inline">List Your Oil</span>
               </Link>
             </>
           )}

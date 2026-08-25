@@ -16,10 +16,10 @@ export async function generateMetadata({
   const post = getPost(slug);
   if (!post) return { title: "Not found — Veritat" };
   return {
-    title: `${post.title} — The Olive Vine | Veritat`,
+    title: `${post.title} — Veritat Olive Oil Blog`,
     description: post.description,
     keywords: post.keywords,
-    alternates: { canonical: `https://veritat.com/journal/${post.slug}` },
+    alternates: { canonical: `https://veritat.com/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -58,7 +58,7 @@ export default async function PostPage({
       name: "Veritat — The Olive Oil Buyer's Guide",
       url: "https://veritat.com",
     },
-    mainEntityOfPage: `https://veritat.com/journal/${post.slug}`,
+    mainEntityOfPage: `https://veritat.com/blog/${post.slug}`,
     keywords: post.keywords.join(", "),
   };
 
@@ -71,10 +71,10 @@ export default async function PostPage({
 
       <div className="mx-auto max-w-2xl">
         <Link
-          href="/journal"
+          href="/blog"
           className="text-sm font-semibold text-olive-600 hover:underline"
         >
-          ← The Olive Vine
+          ← Back to the blog
         </Link>
 
         <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-olive-500">
@@ -137,7 +137,7 @@ export default async function PostPage({
               Explore certified oils
             </Link>
             <Link href="/faq" className="btn-secondary">
-              Read the buyer&apos;s guide
+              Olive oil FAQs
             </Link>
           </div>
         </div>

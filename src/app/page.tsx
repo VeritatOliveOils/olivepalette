@@ -59,7 +59,7 @@ export default async function HomePage() {
               href="/producers"
               className="btn-secondary !border-olive-600 !bg-transparent !px-8 !py-3 !text-white hover:!bg-olive-800"
             >
-              Meet the producers
+              Meet the makers
             </Link>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default async function HomePage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/login?mode=signup" className="btn-primary !px-8 !py-3">
-            Join as a founding producer
+            List your oil — free
           </Link>
           <Link href="/example" className="btn-secondary !px-8 !py-3">
             What a listing looks like

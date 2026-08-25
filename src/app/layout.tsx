@@ -58,12 +58,12 @@ export default function RootLayout({
                     </li>
                     <li>
                       <a href="/faq" className="hover:underline">
-                        Olive oil guide
+                        FAQs
                       </a>
                     </li>
                     <li>
-                      <a href="/journal" className="hover:underline">
-                        The Olive Vine
+                      <a href="/blog" className="hover:underline">
+                        Blog — The Olive Vine
                       </a>
                     </li>
                   </ul>
@@ -75,7 +75,7 @@ export default function RootLayout({
                   <ul className="space-y-1.5 text-olive-700">
                     <li>
                       <a href="/login?mode=signup" className="hover:underline">
-                        List your oil
+                        List your oil — free
                       </a>
                     </li>
                     <li>

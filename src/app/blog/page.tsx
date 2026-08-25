@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { POSTS } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "The Olive Vine — stories and guidance from Veritat",
+  title: "Olive Oil Blog — The Olive Vine | Veritat",
   description:
     "Producer stories, how to taste olive oil, what labels really mean, and new-harvest news. Written by an olive oil sommelier.",
   keywords: [
@@ -13,10 +13,10 @@ export const metadata: Metadata = {
     "new harvest olive oil",
     "olive oil education",
   ],
-  alternates: { canonical: "https://veritat.com/journal" },
+  alternates: { canonical: "https://veritat.com/blog" },
 };
 
-export default function JournalPage() {
+export default function BlogPage() {
   return (
     <div className="mt-6">
       <div className="mx-auto max-w-3xl text-center">
@@ -36,7 +36,7 @@ export default function JournalPage() {
         {POSTS.map((post) => (
           <Link
             key={post.slug}
-            href={`/journal/${post.slug}`}
+            href={`/blog/${post.slug}`}
             className="card card-hover block p-7"
           >
             <p className="text-xs font-semibold uppercase tracking-wider text-olive-500">
