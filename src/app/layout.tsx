@@ -48,7 +48,7 @@ export default function RootLayout({
                   <ul className="space-y-1.5 text-olive-700">
                     <li>
                       <a href="/discover" className="hover:underline">
-                        Discover oils
+                        Certified oils
                       </a>
                     </li>
                     <li>

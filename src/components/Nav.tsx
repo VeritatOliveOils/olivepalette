@@ -32,9 +32,10 @@ export default function Nav() {
         <nav className="flex items-center gap-2 text-sm font-medium text-olive-700 sm:gap-5">
           <Link
             href="/discover"
-            className="flex min-h-11 items-center px-1 hover:text-olive-950"
+            className="flex min-h-11 items-center whitespace-nowrap px-1 hover:text-olive-950"
           >
-            Oils
+            <span className="sm:hidden">Oils</span>
+            <span className="hidden sm:inline">Certified Oils</span>
           </Link>
           <Link
             href="/producers"
