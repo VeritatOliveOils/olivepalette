@@ -16,6 +16,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [producerName, setProducerName] = useState("");
+  const [joinNewsletter, setJoinNewsletter] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -29,6 +30,19 @@ function LoginForm() {
         if (!producerName.trim()) throw new Error("Please enter your producer/brand name.");
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
+
+        // Opt-in newsletter signup — separate from the account itself
+        if (joinNewsletter) {
+          const { error: subErr } = await supabase.from("subscribers").insert({
+            email: email.trim().toLowerCase(),
+            name: producerName.trim() || null,
+            source: "producer-signup",
+          });
+          // 23505 just means they're already subscribed
+          if (subErr && subErr.code !== "23505") {
+            console.error("Newsletter signup failed:", subErr);
+          }
+        }
         if (data.user && data.session) {
           const { error: pErr } = await supabase
             .from("producers")
@@ -94,6 +108,20 @@ function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        {mode === "signup" && (
+          <label className="flex items-start gap-2.5 rounded-xl bg-olive-50 p-3 text-sm text-olive-800">
+            <input
+              type="checkbox"
+              className="mt-0.5 h-4 w-4 shrink-0 accent-olive-700"
+              checked={joinNewsletter}
+              onChange={(e) => setJoinNewsletter(e.target.checked)}
+            />
+            <span>
+              Send me <strong>The Olive Vine</strong> — harvest news, producer stories and
+              buying advice, a few times a month.
+            </span>
+          </label>
+        )}
         {error && <p className="text-sm text-red-700">{error}</p>}
         <button className="btn-primary w-full" disabled={busy}>
           {busy ? "One moment…" : mode === "signup" ? "Create account" : "Log in"}
