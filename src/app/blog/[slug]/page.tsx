@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPost, POSTS } from "@/lib/posts";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -125,7 +126,15 @@ export default async function PostPage({
           })}
         </div>
 
-        <div className="mt-12 rounded-2xl border border-olive-200 bg-white p-7 text-center">
+        <div className="mt-12">
+          <NewsletterSignup
+            source={`blog:${post.slug}`}
+            heading="Liked this? Get the next one."
+            blurb="The Olive Vine — producer stories, new-harvest news and buying advice, a few times a month."
+          />
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-olive-200 bg-white p-7 text-center">
           <p className="font-serif text-xl font-bold text-olive-900">
             Every oil we list states its harvest date.
           </p>

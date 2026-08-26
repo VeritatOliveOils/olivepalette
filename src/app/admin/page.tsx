@@ -29,6 +29,9 @@ export default function AdminPage() {
   const [pending, setPending] = useState<Product[]>([]);
   const [events, setEvents] = useState<ClickEvent[]>([]);
   const [range, setRange] = useState<Range>(30);
+  const [subscribers, setSubscribers] = useState<
+    { email: string; name: string | null; source: string | null; created_at: string }[]
+  >([]);
 
   const load = useCallback(async (r: Range) => {
     const supabase = getSupabase();
@@ -47,7 +50,33 @@ export default function AdminPage() {
     ]);
     setPending((pendingData as Product[]) ?? []);
     setEvents((clickData as ClickEvent[]) ?? []);
+
+    const { data: subs } = await supabase
+      .from("subscribers")
+      .select("email, name, source, created_at")
+      .eq("unsubscribed", false)
+      .order("created_at", { ascending: false });
+    setSubscribers(subs ?? []);
   }, []);
+
+  function downloadSubscribers() {
+    const rows = [
+      ["email", "first_name", "source", "subscribed_at"],
+      ...subscribers.map((s) => [
+        s.email,
+        s.name ?? "",
+        s.source ?? "",
+        new Date(s.created_at).toISOString().slice(0, 10),
+      ]),
+    ];
+    const csv = rows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `olive-vine-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   useEffect(() => {
     (async () => {
@@ -232,6 +261,46 @@ export default function AdminPage() {
                 )}
               </div>
             ))}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-serif text-xl font-bold text-olive-900">
+            The Olive Vine — {subscribers.length} subscriber
+            {subscribers.length === 1 ? "" : "s"}
+          </h2>
+          {subscribers.length > 0 && (
+            <button className="btn-secondary !py-1.5" onClick={downloadSubscribers}>
+              Download CSV
+            </button>
+          )}
+        </div>
+        {subscribers.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-olive-300 p-8 text-center text-olive-500">
+            No subscribers yet — the signup form is on the homepage and every blog post.
+          </p>
+        ) : (
+          <div className="card overflow-hidden">
+            <table className="w-full text-sm">
+              <tbody>
+                {subscribers.slice(0, 10).map((s) => (
+                  <tr key={s.email} className="border-b border-olive-100 last:border-0">
+                    <td className="px-5 py-2.5 text-olive-900">{s.email}</td>
+                    <td className="px-5 py-2.5 text-olive-600">{s.name ?? "—"}</td>
+                    <td className="px-5 py-2.5 text-right text-xs text-olive-500">
+                      {s.source ?? "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {subscribers.length > 10 && (
+              <p className="px-5 py-3 text-xs text-olive-500">
+                Showing the 10 most recent. Download the CSV for the full list.
+              </p>
+            )}
           </div>
         )}
       </section>

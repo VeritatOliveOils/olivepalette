@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSupabase } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
 import Faq from "@/components/Faq";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { BUYER_FAQ } from "@/lib/faq-content";
 import type { Product } from "@/lib/types";
 
@@ -177,6 +178,15 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="mx-auto mt-20 max-w-3xl">
+        <NewsletterSignup
+          source="homepage"
+          heading="Join The Olive Vine"
+          blurb="New harvests as they're pressed, the producers behind the bottles, and how to buy oil worth the money. A few times a month, from an olive oil sommelier."
+        />
       </section>
 
       {/* Producer CTA */}

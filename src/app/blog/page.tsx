@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { POSTS } from "@/lib/posts";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 export const metadata: Metadata = {
   title: "Olive Oil Blog — The Olive Vine | Veritat",
@@ -51,7 +52,11 @@ export default function BlogPage() {
         ))}
       </div>
 
-      <section className="mx-auto mt-16 max-w-3xl rounded-[2rem] border border-olive-200 bg-white px-8 py-12 text-center">
+      <section className="mx-auto mt-12 max-w-3xl">
+        <NewsletterSignup source="blog-index" />
+      </section>
+
+      <section className="mx-auto mt-12 max-w-3xl rounded-[2rem] border border-olive-200 bg-white px-8 py-12 text-center">
         <h2 className="font-serif text-2xl font-bold text-olive-900">
           Find an oil worth writing about
         </h2>
