@@ -25,6 +25,97 @@ export interface Post {
 
 export const POSTS: Post[] = [
   {
+      slug: "olive-oil-gift-guide",
+      title: "How to give olive oil as a gift, and what to look for",
+      description: "A sommelier's guide to giving olive oil as a gift: why new-harvest oil is the bottle to give, what makes a good gift bottle, and how to choose by taste.",
+      excerpt: "A good bottle of olive oil is one of the few gifts that gets used to the last drop. Here is how to choose one worth giving.",
+      date: "2026-11-14",
+      displayDate: "14 November 2026",
+      readingMinutes: 4,
+      keywords: [
+        "olive oil gift",
+        "olive oil gift ideas",
+        "best olive oil to give as a gift",
+        "new harvest olive oil gift",
+        "olive oil for food lovers",
+      ],
+      body: [
+        {
+          type: "p",
+          text: "Olive oil is one of the few gifts that gets used to the last drop. It ends up on the table every day, and it reminds the person of you every time they pour it. But a beautiful bottle is not always a good bottle. Here is how I choose one worth giving.",
+        },
+        {
+          type: "h2",
+          text: "Give the new harvest",
+        },
+        {
+          type: "p",
+          text: "November is the best month of the year to give olive oil. Across Spain, Italy, Greece and the rest of the Mediterranean, the harvest is under way and the first oil of the season is coming off the mills. It is green, bright and peppery, and it only tastes like this for a short time.",
+        },
+        {
+          type: "p",
+          text: "Giving new-harvest oil is like giving the first strawberries of summer. It says you chose something at its peak, not something that has been sitting on a shelf. Look for the harvest month on the label. If it says this autumn, you have found the one.",
+        },
+        {
+          type: "h2",
+          text: "What makes a good gift bottle",
+        },
+        {
+          type: "p",
+          text: "The prettiest bottle in the shop is often clear glass with a ribbon on it. Clear glass lets light in, and light is one of the things that ages olive oil fastest. Pass it by.",
+        },
+        {
+          type: "list",
+          items: [
+            "A stated harvest date. Not just a best-by date. The harvest date tells you how fresh the oil really is.",
+            "Dark glass or a tin. Both protect the oil from light. A good tin can be as handsome as any bottle.",
+            "A size they will finish. A 500 ml bottle used with joy beats a litre that goes stale in the cupboard. If you want to give more, give two different small bottles.",
+            "Who made it. A named producer, a named place and, ideally, a named variety of olive. Mystery oil is not a gift.",
+          ],
+        },
+        {
+          type: "p",
+          text: "And keep it out of a hot car or a sunny window while it waits under the tree.",
+        },
+        {
+          type: "h2",
+          text: "Choose by taste, not by price",
+        },
+        {
+          type: "p",
+          text: "Olive oils are as different as wines. The best gift matches the person, not the price tag. On Veritat you can filter the oils by intensity, delicate, medium or robust, which makes this easy.",
+        },
+        {
+          type: "list",
+          items: [
+            "Delicate, for someone new to good olive oil. Soft, buttery, gently fruity. Lovely on fish, eggs and salads, and a gentle introduction for anyone who thinks olive oil is just for cooking.",
+            "Medium, for the everyday cook. Fresh and green with a little bitterness and a light peppery finish. It works with almost everything, from roast vegetables to pasta.",
+            "Robust, for the food lover who wants a thrill. Grassy, bitter and peppery enough to make you cough. Wonderful over beans, grilled meat, bitter greens and warm bread. This is the one for the friend who already has everything.",
+          ],
+        },
+        {
+          type: "p",
+          text: "If you cannot decide, give two small bottles of different intensities. Tasting them side by side is half the fun, and it is the quickest way to learn what you like.",
+        },
+        {
+          type: "h2",
+          text: "Make it a little ritual",
+        },
+        {
+          type: "p",
+          text: "Add a loaf of good bread and a small dish of flaky salt, and the gift becomes an evening. Write the harvest date and the producer's name on the card. It tells them this is not just any oil, and that you know the difference.",
+        },
+        {
+          type: "p",
+          text: "Every oil in the Veritat directory shows its harvest date and links straight to the producer's own shop, so your gift money goes to the family who made it.",
+        },
+        {
+          type: "p",
+          text: "Wishing you a season of good bread, good oil and good company.\n\nWarmest wishes,\nJulie",
+        },
+      ],
+    },
+  {
       slug: "early-harvest-olive-oil",
       title: "Early harvest olive oil: why green olives cost more",
       description: "Early harvest olive oil is pressed from green olives in October. Why it gives less oil, why it tastes peppery, and why only a lab report proves the polyphenols.",
