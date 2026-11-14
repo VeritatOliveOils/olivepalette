@@ -21,10 +21,21 @@ export default function NewsletterSignup({
   const [name, setName] = useState("");
   const [state, setState] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [message, setMessage] = useState("");
+  // Bot protection: hidden field plus a minimum fill time
+  const [website, setWebsite] = useState("");
+  const [openedAt] = useState(() => Date.now());
 
   async function subscribe(e: React.FormEvent) {
     e.preventDefault();
     if (!email.trim()) return;
+    const [local, domain] = email.trim().toLowerCase().split("@");
+    const dotTrick = domain === "gmail.com" && (local?.match(/\./g)?.length ?? 0) >= 3;
+    if (website.trim() || Date.now() - openedAt < 3000 || dotTrick) {
+      // Quietly show success so bots learn nothing
+      setState("done");
+      setMessage("Welcome to The Olive Vine");
+      return;
+    }
     setState("saving");
     try {
       const supabase = getSupabase();
@@ -77,6 +88,12 @@ export default function NewsletterSignup({
       <p className="mt-1 text-sm leading-relaxed text-olive-600">{blurb}</p>
 
       <form onSubmit={subscribe} className="mt-4 space-y-3">
+        <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+          <label>
+            Website
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </label>
+        </div>
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             className="input sm:max-w-[10rem]"

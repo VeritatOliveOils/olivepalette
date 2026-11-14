@@ -7,6 +7,15 @@ import { getSupabase } from "@/lib/supabase";
 import Faq from "@/components/Faq";
 import { PRODUCER_FAQ } from "@/lib/faq-content";
 
+/** Gmail ignores dots, so addresses like a.b.c.1.23@gmail.com are a common bot trick. */
+function looksLikeBot(email: string, honeypot: string, openedAt: number) {
+  if (honeypot.trim()) return true;
+  if (Date.now() - openedAt < 3000) return true;
+  const [local, domain] = email.trim().toLowerCase().split("@");
+  if (domain === "gmail.com" && (local?.match(/\./g)?.length ?? 0) >= 3) return true;
+  return false;
+}
+
 function LoginForm() {
   const params = useSearchParams();
   const router = useRouter();
@@ -19,6 +28,9 @@ function LoginForm() {
   const [joinNewsletter, setJoinNewsletter] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Bot protection: a hidden field people never see, and a minimum fill time
+  const [website, setWebsite] = useState("");
+  const [openedAt] = useState(() => Date.now());
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,6 +39,10 @@ function LoginForm() {
     const supabase = getSupabase();
     try {
       if (mode === "signup") {
+        if (looksLikeBot(email, website, openedAt)) {
+          setError("Check your email to confirm your account, then log in.");
+          return;
+        }
         if (!producerName.trim()) throw new Error("Please enter your producer/brand name.");
         const { data, error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
@@ -76,6 +92,12 @@ function LoginForm() {
           : "Log in to manage your products."}
       </p>
       <form onSubmit={submit} className="space-y-4">
+        <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+          <label>
+            Website
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </label>
+        </div>
         {mode === "signup" && (
           <div>
             <label className="label">Producer / brand name</label>
