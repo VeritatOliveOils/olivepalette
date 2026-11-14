@@ -1,3 +1,4 @@
+import { isWiooMember } from "@/lib/wioo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getServerSupabase } from "@/lib/supabase";
@@ -71,6 +72,7 @@ export default async function OilPage({
             <span className="tag !bg-olive-700 !text-white">✓ Veritat Certified</span>
           )}
           {product.producers?.is_women_led && <span className="tag">🚺 women-led</span>}
+          {isWiooMember(product.producer_id) && <span className="tag">WIOO member</span>}
           {product.category && <span className="tag capitalize">{product.category}</span>}
           {product.intensity && <span className="tag capitalize">{product.intensity}</span>}
           {product.organic && <span className="tag !bg-gold/20 !text-olive-900">organic</span>}

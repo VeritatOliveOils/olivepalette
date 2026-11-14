@@ -1,3 +1,4 @@
+import { isWiooMember } from "@/lib/wioo";
 import { notFound } from "next/navigation";
 import { getServerSupabase } from "@/lib/supabase";
 import ProductCard from "@/components/ProductCard";
@@ -59,6 +60,9 @@ export default async function ProducerPage({
         <div className="mt-3 flex flex-wrap gap-1.5">
           {producer.is_women_led && (
             <span className="tag !bg-olive-700 !text-olive-100">🚺 women-led</span>
+          )}
+          {isWiooMember(producer.id) && (
+            <span className="tag !bg-olive-700 !text-olive-100">WIOO member</span>
           )}
           {producer.certifications_text && (
             <span className="tag !bg-olive-700 !text-olive-100">

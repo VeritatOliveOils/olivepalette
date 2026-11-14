@@ -189,6 +189,24 @@ export default async function HomePage() {
         />
       </section>
 
+      {/* Women in Olive Oil members */}
+      <section className="mt-20 flex flex-col items-center justify-between gap-5 rounded-3xl border border-olive-200 bg-white px-8 py-10 text-center sm:flex-row sm:text-left">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-olive-500">
+            Women in Olive Oil
+          </p>
+          <h2 className="mt-2 font-serif text-2xl font-bold text-olive-900">
+            Members list one oil free, permanently.
+          </h2>
+          <p className="mt-1 text-olive-600">
+            With a member mark, wholesale visibility and click analytics.
+          </p>
+        </div>
+        <Link href="/wioo" className="btn-primary whitespace-nowrap !px-8 !py-3">
+          See the member collection
+        </Link>
+      </section>
+
       {/* Producer CTA */}
       <section className="mt-24 overflow-hidden rounded-[2rem] border border-olive-200 bg-white px-8 py-14 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-olive-500">

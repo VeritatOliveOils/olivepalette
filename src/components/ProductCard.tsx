@@ -1,3 +1,4 @@
+import { isWiooMember } from "@/lib/wioo";
 import Link from "next/link";
 import { formatPrice } from "@/lib/constants";
 import type { Product } from "@/lib/types";
@@ -41,6 +42,7 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="tag !bg-olive-800 !text-white">✓ Certified</span>
         )}
         {product.producers?.is_women_led && <span className="tag">🚺 women-led</span>}
+        {isWiooMember(product.producer_id) && <span className="tag">WIOO member</span>}
         {product.intensity && <span className="tag capitalize">{product.intensity}</span>}
         {product.flavor_tags.slice(0, 2).map((t) => (
           <span key={t} className="tag">
