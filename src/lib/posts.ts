@@ -161,7 +161,7 @@ export const POSTS: Post[] = [
         },
         {
           type: "p",
-          text: "If you love Mediterranean oil, this is a good month to try something new. Then come back to Spain and Italy when the new harvest lands.",
+          text: "If you love Mediterranean oil, this is a good month to try something new from the Southern Hemisphere. Look for the same variety you already love from Europe, and taste the two side by side to see how a different climate changes it. Then come back to the Northern Hemisphere when the new harvest arrives.",
         },
         {
           type: "h2",
