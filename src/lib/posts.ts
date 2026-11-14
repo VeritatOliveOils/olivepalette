@@ -25,6 +25,177 @@ export interface Post {
 
 export const POSTS: Post[] = [
   {
+      slug: "early-harvest-olive-oil",
+      title: "Early harvest olive oil: why green olives cost more",
+      description: "Early harvest olive oil is pressed from green olives in October. Why it gives less oil, why it tastes peppery, and why only a lab report proves the polyphenols.",
+      excerpt: "In October the first olives come off the trees while they are still green. They give less oil, and a very different one. Here is what you are paying for.",
+      date: "2026-10-13",
+      displayDate: "13 October 2026",
+      readingMinutes: 4,
+      keywords: [
+        "early harvest olive oil",
+        "green olives olive oil",
+        "high polyphenol olive oil",
+        "olive oil lab report",
+        "oleocanthal",
+      ],
+      body: [
+        {
+          type: "p",
+          text: "October is when the harvest starts in Spain, Italy, Greece and the rest of the Northern Hemisphere. Some producers do not wait for the olives to ripen. They pick them green, or just as they start to turn, and press them straight away. That is early harvest olive oil, and it is the most expensive oil many producers make.",
+        },
+        {
+          type: "h2",
+          text: "Less oil from the same trees",
+        },
+        {
+          type: "p",
+          text: "A green olive holds less oil than a ripe one. So an early harvest gives the producer fewer litres from the same grove, and that cost lands on the price of the bottle.",
+        },
+        {
+          type: "p",
+          text: "How much less? One study followed a single orchard in western Turkey and pressed its olives in the same mill twice: once on 4 October 2021 and again on 8 December. The early fruit gave 11.37% oil. The December fruit gave 13.67%. That is roughly one sixth less oil, from the same trees, just by picking two months sooner.",
+        },
+        {
+          type: "h2",
+          text: "What it tastes like",
+        },
+        {
+          type: "p",
+          text: "Early harvest oil is green in every sense. Expect cut grass, green tomato, artichoke and almond skin, then bitterness on the tongue and a peppery catch at the back of the throat. That catch is linked to oleocanthal, one of the natural compounds in fresh olive oil. If it makes you cough, the oil is doing its job.",
+        },
+        {
+          type: "p",
+          text: "In the Turkish study, the tasting panel gave the October oil higher scores for green fruit, bitterness and pepper. Consumers in the same study preferred it too.",
+        },
+        {
+          type: "h2",
+          text: "The part the label leaves out",
+        },
+        {
+          type: "p",
+          text: "You will often read that early harvest means more polyphenols, the antioxidants behind olive oil's health reputation. Often that is true. But it is not a rule. In that same study, the December oil actually contained more biophenols than the October one. Variety, weather, irrigation and milling all change the result.",
+        },
+        {
+          type: "p",
+          text: "So the words early harvest on a label tell you about the style of the oil. They do not prove what is inside. Only a lab report does.",
+        },
+        {
+          type: "h2",
+          text: "What a polyphenol number really means",
+        },
+        {
+          type: "p",
+          text: "In the European Union, an olive oil can only carry the health claim that its polyphenols help protect blood lipids from oxidative stress if it contains at least 5 mg of hydroxytyrosol and its derivatives per 20 g of oil. That works out to about 250 mg per kilo. The label must also say the benefit comes from 20 g of oil a day.",
+        },
+        {
+          type: "p",
+          text: "A high number on a website, with no lab named and no date of analysis, is a marketing figure. A real one comes with a report.",
+        },
+        {
+          type: "h2",
+          text: "How to buy early harvest oil well",
+        },
+        {
+          type: "list",
+          items: [
+            "Check the harvest month. Early harvest from the north should say October or November.",
+            "Ask for the lab report: the lab's name, the date of analysis and the polyphenol result.",
+            "Buy a small bottle. The pepper and bitterness soften over the months, so drink it young.",
+            "Expect to pay more. Less oil per tree is the honest reason why.",
+          ],
+        },
+        {
+          type: "p",
+          text: "Every oil certified on Veritat states its harvest date. Before I certify an oil, I ask to see the lab report behind any polyphenol figure it claims.",
+        },
+        {
+          type: "p",
+          text: "Here is to the first green oil of the season.\n\nWarmest wishes,\nJulie",
+        },
+      ],
+    },
+  {
+      slug: "september-olive-oil-harvest-date",
+      title: "Why September is the hardest month to buy good olive oil",
+      description: "In September most olive oil on the shelf is nearly a year old. How to read the harvest date, why best-by misleads, and where to find fresher oil.",
+      excerpt: "The new harvest has not started, and last year's oil is at its oldest. A sommelier's guide to buying well in the leanest month of the olive oil year.",
+      date: "2026-09-15",
+      displayDate: "15 September 2026",
+      readingMinutes: 4,
+      keywords: [
+        "olive oil harvest date",
+        "olive oil best by date",
+        "fresh olive oil",
+        "southern hemisphere olive oil",
+        "how to buy olive oil",
+      ],
+      body: [
+        {
+          type: "p",
+          text: "September is the leanest month of the olive oil year. In Spain, Italy and Greece the olives are still on the trees. The Northern Hemisphere harvest runs from about October to January, so the Mediterranean oil in most shops right now was pressed last autumn. It is close to a year old, and it is as old as it is going to get before the new oil arrives.",
+        },
+        {
+          type: "p",
+          text: "That does not mean you cannot buy well. It means you have to read the label more carefully than usual.",
+        },
+        {
+          type: "h2",
+          text: "The date that matters",
+        },
+        {
+          type: "p",
+          text: "Most bottles show a best-by date. That tells you how long the bottler expects the oil to stay sellable. It does not tell you when the olives were picked, and two bottles with the same best-by date can be very different ages.",
+        },
+        {
+          type: "p",
+          text: "The harvest date is the one that matters. Under European Union marketing rules, a harvest year may be shown only if 100% of the oil in the bottle comes from that harvest. Blends of several seasons cannot print one. So when a producer states the harvest clearly, it is a small act of honesty, and worth rewarding.",
+        },
+        {
+          type: "h2",
+          text: "Look south in September",
+        },
+        {
+          type: "p",
+          text: "Olive trees in Australia, Chile, Argentina and South Africa follow the southern seasons, with harvest roughly between April and June. A bottle pressed there in May is the freshest olive oil you can buy in September.",
+        },
+        {
+          type: "p",
+          text: "If you love Mediterranean oil, this is a good month to try something new. Then come back to Spain and Italy when the new harvest lands.",
+        },
+        {
+          type: "h2",
+          text: "Reading a label this month",
+        },
+        {
+          type: "list",
+          items: [
+            "Harvest date from last autumn: fine, but buy a small bottle and use it soon.",
+            "Harvest date from this year, Southern Hemisphere: the freshest option on the shelf.",
+            "Only a best-by date: ask the seller when it was pressed. If they cannot tell you, move on.",
+            "Dark glass or a tin, kept away from heat and light, always.",
+            "Buy a size you will finish quickly once it is open.",
+          ],
+        },
+        {
+          type: "h2",
+          text: "Trust your nose",
+        },
+        {
+          type: "p",
+          text: "Pour a little into a glass, cup it in your hand to warm it, and smell. Fresh oil smells green and fruity. Oil that smells of crayons, putty or old walnuts has gone rancid, whatever the label says. No date can overrule your nose.",
+        },
+        {
+          type: "p",
+          text: "This is why Veritat has one rule that never bends: no verified harvest date, no certification. Every oil in the directory shows its harvest, so you can see at a glance how fresh it is.",
+        },
+        {
+          type: "p",
+          text: "The new season is only weeks away.\n\nWarmest wishes,\nJulie",
+        },
+      ],
+    },
+  {
     slug: "olio-nuovo-season",
     title: "Olive oil autumn: what olio nuovo is, and why you drink it fast",
     description:
