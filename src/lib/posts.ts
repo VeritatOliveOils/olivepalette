@@ -25,6 +25,115 @@ export interface Post {
 
 export const POSTS: Post[] = [
   {
+    slug: "which-olive-oil-for-which-holiday-dish",
+    title: "Which olive oil for which holiday dish",
+    description: "A sommelier's guide to olive oil for the holiday table: delicate, medium and robust styles, which to use for each dish, and when to open the best bottle.",
+    excerpt: "One bottle does not fit every dish. Here is how I match delicate, medium and robust olive oils to the holiday table, from the roast to the last drizzle.",
+    date: "2026-11-23",
+    displayDate: "23 November 2026",
+    readingMinutes: 4,
+    keywords: [
+      "olive oil for Thanksgiving",
+      "which olive oil to use",
+      "cooking with extra virgin olive oil",
+      "delicate medium robust olive oil",
+      "olive oil smoke point"
+    ],
+    body: [
+      {
+        type: "p",
+        text: "The holiday table asks a lot of one bottle of oil. It roasts, it dresses, it bakes and it finishes. But olive oils are as different as wines, and the right one can lift a dish the way the wrong one can flatten it. Here is how I match them."
+      },
+      {
+        type: "h2",
+        text: "Three styles, and where they come from"
+      },
+      {
+        type: "p",
+        text: "On Veritat you can sort oils by intensity: delicate, medium or robust. Two things decide where an oil lands."
+      },
+      {
+        type: "p",
+        text: "The first is when the olives were picked. Olives picked early, while still green, give a stronger oil. Olives picked late in the season give a milder one. Early oils tend to be bitter and pungent, with a bright green colour. Later oils lean ripe and sweet."
+      },
+      {
+        type: "p",
+        text: "The second is the variety of olive. A few to know:"
+      },
+      {
+        type: "list",
+        items: [
+          "Arbequina, from Catalonia, usually makes a mild, fruity oil with little bitterness or pepper.",
+          "Picual, from Andalusia, and Coratina, from Puglia, are known for green, bitter and peppery oils, often robust.",
+          "Koroneiki, the main olive of Greece, gives a green, herbal oil. Picked young it can be bold; picked later it is gentler."
+        ]
+      },
+      {
+        type: "p",
+        text: "Treat variety as a starting point, not a promise. Weather, timing and the mill all change the oil in the bottle. A fresh, carefully made Arbequina can taste medium, not delicate. Your tongue has the final word."
+      },
+      {
+        type: "h2",
+        text: "Yes, you can cook with it"
+      },
+      {
+        type: "p",
+        text: "People still tell me extra virgin olive oil is too delicate to cook with. It is not. Its smoke point usually sits between 350°F and 410°F (about 175°C to 210°C), and the average stovetop cooks at around 350°F."
+      },
+      {
+        type: "p",
+        text: "Smoke point is also not the best guide to how an oil behaves under heat. In a 2018 study, extra virgin olive oil and nine other common oils were heated for hours at frying temperature. Extra virgin olive oil stayed the most stable, producing the fewest harmful polar compounds. Its natural antioxidants and low level of polyunsaturated fat protect it. Canola, grapeseed and rice bran oil did worst."
+      },
+      {
+        type: "p",
+        text: "So roast, sauté and bake with it. Just do not leave an empty pan heating on the burner."
+      },
+      {
+        type: "h2",
+        text: "Dish by dish"
+      },
+      {
+        type: "list",
+        items: [
+          "The roast and the roasting tray. Use a good everyday extra virgin oil for the turkey, the potatoes and the root vegetables. A medium oil is the most useful here. Save the expensive bottle for later.",
+          "Mashed potatoes. Choose a smooth medium or delicate oil. Any bitterness in the oil comes through in a mash, so this is not the place for your most peppery bottle. Pour a little more over the top at the table.",
+          "Salads. Delicate oils suit tender butter lettuce, fennel and citrus. Medium oils make the best vinaigrettes. Robust oils stand up to bitter greens like radicchio and frisée.",
+          "The stuffing, or dressing. Soften the onions and celery in your everyday oil. A spoonful of medium oil stirred in before it goes into the oven keeps it moist and adds a gentle green note.",
+          "Baking. Reach for a delicate oil. It suits cakes, quick breads and anything with citrus, and it will not fight with the spices in a pumpkin loaf.",
+          "The finishing drizzle. This is where the robust, early harvest oil shines. Pour it over hot food: a bowl of squash soup, white beans, roast vegetables, sliced meat. Heat softens how bitter the oil tastes, so a bold oil feels round instead of harsh."
+        ]
+      },
+      {
+        type: "h2",
+        text: "Everyday oil, best bottle"
+      },
+      {
+        type: "p",
+        text: "You do not need your finest new-harvest oil to roast a tray of carrots. Cook with a decent, fresh extra virgin oil you are happy to pour freely. If your budget allows a better oil in the pan, there is no harm in it."
+      },
+      {
+        type: "p",
+        text: "But keep the special bottle for the moments when it is raw, or poured over food at the end. That is when you taste every bit of the grass, the green tomato and the pepper you paid for. One good bottle of new oil, opened at the table, does more for a holiday meal than two used in the roasting pan."
+      },
+      {
+        type: "h2",
+        text: "Fresh is the rule"
+      },
+      {
+        type: "p",
+        text: "Whatever style you choose, freshness matters most. Look for the harvest date, not just a best-by date. This autumn's oil is the one to open this season."
+      },
+      {
+        type: "p",
+        text: "Every oil in the Veritat directory shows its harvest date, so you always know how fresh the bottle on your table really is."
+      },
+      {
+        type: "p",
+        text: "Wishing you a warm and generous table.\n\nWarmest wishes,\nJulie"
+      }
+    ]
+  },
+  {
       slug: "olive-oil-gift-guide",
       title: "How to give olive oil as a gift, and what to look for",
       description: "A sommelier's guide to giving olive oil as a gift: why new-harvest oil is the bottle to give, what makes a good gift bottle, and how to choose by taste.",
