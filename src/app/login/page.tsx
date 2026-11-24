@@ -28,6 +28,7 @@ function LoginForm() {
   const [joinNewsletter, setJoinNewsletter] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   // Bot protection: a hidden field people never see, and a minimum fill time
   const [website, setWebsite] = useState("");
   const [openedAt] = useState(() => Date.now());
@@ -78,6 +79,22 @@ function LoginForm() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function forgotPassword() {
+    setError(null);
+    setNotice(null);
+    if (!email.trim()) {
+      setError("Enter your email above first, then click \"Forgot password?\" again.");
+      return;
+    }
+    setBusy(true);
+    const { error } = await getSupabase().auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setBusy(false);
+    if (error) setError(error.message);
+    else setNotice("Check your email for a link to set your password.");
   }
 
   return (
@@ -144,7 +161,17 @@ function LoginForm() {
             </span>
           </label>
         )}
+        {mode === "login" && (
+          <button
+            type="button"
+            onClick={forgotPassword}
+            className="-mt-2 text-sm text-olive-600 underline hover:text-olive-900"
+          >
+            Forgot password? (or first time setting one)
+          </button>
+        )}
         {error && <p className="text-sm text-red-700">{error}</p>}
+        {notice && <p className="text-sm text-olive-800">{notice}</p>}
         <button className="btn-primary w-full" disabled={busy}>
           {busy ? "One moment…" : mode === "signup" ? "Create account" : "Log in"}
         </button>
