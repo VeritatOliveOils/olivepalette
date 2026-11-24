@@ -90,6 +90,9 @@ export default function RootLayout({
             <p className="mt-10 border-t border-olive-100 pt-6 text-xs text-olive-400">
               © {new Date().getFullYear()} Veritat · the truth behind every bottle
             </p>
+            <p className="mt-2 text-xs text-olive-400">
+              As an Amazon Associate, Veritat earns from qualifying purchases.
+            </p>
           </div>
         </footer>
         <Analytics />
